@@ -33,18 +33,19 @@ Estas son las aplicaciones/utilidades que necesita:
   
   - **Paso 2:** Lanzar el servidor de Apache y de MySQL.
   
--Si tenemos instalado XAMPP, simplemente abrimos la aplicación y le damos a start en los módulos de Apache y                  MySQL.
-                
--Si hemos optado por instalar manualmente ambos servicios, debemos buscar las rutas correspondientes a su instalación y
- lanzar el script que especifiquen para iniciar el servicio.
+       -Si tenemos instalado XAMPP, simplemente abrimos la aplicación y le damos a start en los módulos de Apache y                  MySQL.  
   
+       -Si hemos optado por instalar manualmente ambos servicios, debemos buscar las rutas correspondientes a su instalación y
+ lanzar el script que especifiquen para iniciar el servicio.
+       
   - **Paso 3:** Instalar la base de datos SQL de la aplicación:
   
--Accedemos al módulo de phpMyAdmin, que se suele encontrar en: http://127.0.0.1/phpmyadmin/index.php
+       -Accedemos al módulo de phpMyAdmin, que se suele encontrar en: http://127.0.0.1/phpmyadmin/index.php
+ 
+       -Creamos una nueva base de datos de nombre 'tfg'.
+       
+       -Importamos el archivo 'tfg.SQL', que se encuentra en esta misma página y debemos descargar previamente.      
                 
--Creamos una nueva base de datos de nombre 'tfg'.
-                
--Importamos el archivo 'tfg.SQL', que se encuentra en esta misma página y debemos descargar previamente.
   
   - **Paso 4:** Abrir la consola de comandos de Node (Node.js command prompt) la cual se creará automáticamente en: 
                 
