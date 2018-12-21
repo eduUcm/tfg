@@ -32,9 +32,20 @@ Estas son las aplicaciones/utilidades que necesita:
  
   - **Paso 1:** Abrir la consola de comandos de Node (Node.js command prompt) la cual se creará automáticamente en: 
                 
+                ```
                 C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Node.js
+                ```
                 
-               También puede accederse a ella mediante el buscador de windows indicando la palabra: node, como muestra
-               la imagen a continuación:
-               
-               ![alt text](https://gyazo.com/983fa0756b5c67245b6dcac2355a2271)
+       También puede accederse a ella mediante el buscador de windows indicando la palabra: node, como muestra
+       la imagen a continuación:
+   
+              ![alt text](https://gyazo.com/983fa0756b5c67245b6dcac2355a2271)
+              
+       Alternativamente si tienes problemas encontrando el acceso directo, o no se te ha creado, puedes acerlo manualmente:
+       
+            - Ejecuta el símbolo del sistema (cmd).
+            - Introduce los siguientes comandos:
+                -cd C:\Program Files\nodejs
+                -nodevars.bat
+            -Esa misma consola ya estará prepara para funcionar con Node.
+            
