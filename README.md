@@ -50,5 +50,13 @@ Estas son las aplicaciones/utilidades que necesita:
             
   - **Paso 3:** Localizar el proyecto en la consola de comandos que hemos abierto en el paso 2.   
   
-  - **Paso 4:** Ejecutar el scrip de iniciación:    
+  - **Paso 4:** Ejecutar el scrip de instalación de dependencias:  
+  
+                npm run pre-install
+                
+  - **Paso 5:** Ejecutar el scrip de inicio:  
+  
+                npm run start
+ 
+       Nota: Para el correcto funcionamiento del servidor se utiliza nodemon, el cual se instalará en el paso 4.
             
