@@ -44,7 +44,7 @@ Estas son las aplicaciones/utilidades que necesita:
  
        -Creamos una nueva base de datos de nombre 'tfg'.
        
-       -Importamos el archivo 'tfg.SQL', que se encuentra en esta misma página y debemos descargar previamente.      
+       -Importamos el archivo 'tfg.SQL', que se encuentra en esta misma página ([ver archivo](https://github.com/eduUcm/tfg/blob/master/tfg.sql)) y debemos descargar previamente.      
                 
   
   - **Paso 4:** Abrir la consola de comandos de Node (Node.js command prompt) la cual se creará automáticamente en: 
