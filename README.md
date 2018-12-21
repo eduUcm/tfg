@@ -29,12 +29,11 @@ Estas son las aplicaciones/utilidades que necesita:
  
  Una vez se cumplan los prerrequisitos anteriores podemos empezar con la guía de instalación:
  
- 
-  - **Paso 1:** Abrir la consola de comandos de Node (Node.js command prompt) la cual se creará automáticamente en: 
+  - **Paso 1:** Descargar el código del proyecto, que se encuentra en esta misma página. 
+  
+  - **Paso 2:** Abrir la consola de comandos de Node (Node.js command prompt) la cual se creará automáticamente en: 
                 
-                ```
                 C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Node.js
-                ```
                 
        También puede accederse a ella mediante el buscador de windows indicando la palabra: node, como muestra
        la imagen a continuación:
@@ -48,4 +47,8 @@ Estas son las aplicaciones/utilidades que necesita:
                 -cd C:\Program Files\nodejs
                 -nodevars.bat
             -Esa misma consola ya estará prepara para funcionar con Node.
+            
+  - **Paso 3:** Localizar el proyecto en la consola de comandos que hemos abierto en el paso 2.   
+  
+  - **Paso 4:** Ejecutar el scrip de iniciación:    
             
