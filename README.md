@@ -74,5 +74,5 @@ Estas son las aplicaciones/utilidades que necesita:
   
                 npm run start
  
-       Nota: Para el correcto funcionamiento del servidor se utiliza nodemon, el cual se instalará en el paso 4.
+       Nota: Para el correcto funcionamiento del servidor se utiliza nodemon, el cual se instalará automáticamente en el paso 6.
             
