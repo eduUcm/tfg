@@ -31,7 +31,22 @@ Estas son las aplicaciones/utilidades que necesita:
  
   - **Paso 1:** Descargar el código del proyecto, que se encuentra en esta misma página. 
   
-  - **Paso 2:** Abrir la consola de comandos de Node (Node.js command prompt) la cual se creará automáticamente en: 
+  - **Paso 2:** Lanzar el servidor de Apache y de MySQL.
+  
+-Si tenemos instalado XAMPP, simplemente abrimos la aplicación y le damos a start en los módulos de Apache y                  MySQL.
+                
+-Si hemos optado por instalar manualmente ambos servicios, debemos buscar las rutas correspondientes a su instalación y
+ lanzar el script que especifiquen para iniciar el servicio.
+  
+  - **Paso 3:** Instalar la base de datos SQL de la aplicación:
+  
+-Accedemos al módulo de phpMyAdmin, que se suele encontrar en: http://127.0.0.1/phpmyadmin/index.php
+                
+-Creamos una nueva base de datos de nombre 'tfg'.
+                
+-Importamos el archivo 'tfg.SQL', que se encuentra en esta misma página y debemos descargar previamente.
+  
+  - **Paso 4:** Abrir la consola de comandos de Node (Node.js command prompt) la cual se creará automáticamente en: 
                 
                 C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Node.js
                 
@@ -48,13 +63,13 @@ Estas son las aplicaciones/utilidades que necesita:
                 -nodevars.bat
             -Esa misma consola ya estará prepara para funcionar con Node.
             
-  - **Paso 3:** Localizar el proyecto en la consola de comandos que hemos abierto en el paso 2.   
+  - **Paso 5:** Localizar el proyecto en la consola de comandos que hemos abierto en el paso 2.   
   
-  - **Paso 4:** Ejecutar el scrip de instalación de dependencias:  
+  - **Paso 6:** Ejecutar el scrip de instalación de dependencias:  
   
                 npm run pre-install
                 
-  - **Paso 5:** Ejecutar el scrip de inicio:  
+  - **Paso 7:** Ejecutar el scrip de inicio:  
   
                 npm run start
  
