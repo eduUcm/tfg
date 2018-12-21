@@ -76,3 +76,5 @@ Estas son las aplicaciones/utilidades que necesita:
  
        Nota: Para el correcto funcionamiento del servidor se utiliza nodemon, el cual se instalará automáticamente en el paso 6.
             
+  - **Paso 8:** ya podemos acceder a la web localmente desde la dirección : http://localhost:3000/         
+            
