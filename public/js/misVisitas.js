@@ -1,0 +1,674 @@
+"use strict";
+
+var lugares = [];
+
+
+$(document).ready(function() {
+	lugares = [];
+
+	cargarMisVisitas();
+	cargarRecomendaciones();
+	restringirFechas();
+
+	document.getElementById("botonCrear").disabled = false; 
+
+    $("#anadirLugar").on("click", mostrarMenuLugares);
+    $("#listarMuseos").on("click", botonListarMuseos);
+    $("#ocultarMuseos").on("click", botonOcultarMuseos);
+    $("#listarTemplos").on("click", botonListarTemplos);
+    $("#ocultarTemplos").on("click", botonOcultarTemplos);
+    $("#listarEdificioM").on("click", botonListarEdificioM);
+    $("#ocultarEdificioM").on("click", botonOcultarEdificioM);
+    $("#botonCrear").on("click", validarVisita);
+
+
+    $('.nuevoLugarCancelar').click(function(){
+		$("#nuevaVisita").show();
+	});
+	$(".botonOcultar").hide();
+
+});
+
+function restringirFechas(){
+
+	var date = new Date();
+	var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+    $('#datepicker').datepicker({
+        uiLibrary: 'bootstrap4',
+        dateFormat: 'yyyy-mm-dd',
+        minDate: today
+    });
+}
+
+function cargarMisVisitas(){
+    $.ajax({
+        type: "GET",
+        url:  "/listarVisitas",
+
+        success: function (data, textStatus, jqXHR) {
+            data.forEach(function (n) {
+                //Convertimos la fecha a un formato más adecuado
+                var f = new Date(n.dia_visita);
+                var fecha = f.toLocaleDateString();
+
+                //CABECERA
+                //Li con cada monumento
+                var visita = "<li id='visita"+ n.id_visita +"' class='list-group-item'>" +
+                                "<div class='row'>"+
+                                    "<div class='col-md-6'>"+
+                                        "<h5 class='tituloVisita'>"+ n.titulo +"</h5>"+
+                                        "<p class='card-text'><small class='text-muted'>valoración: "+n.puntuacion+" ("+n.votos+" votos)</small></p>"+
+                                    "</div>"+
+                                    "<div class='col-md-3'>"+
+                                        "<small class='text-muted'>"+fecha+"</small>"+
+                                    "</div>"+
+                                    "<div class='col-md-3 justify-content-end d-flex'>"+
+                                        "<button id="+n.id_visita+" type='button' class='btn' data-toggle='modal' data-target='#modalVisi"+n.id_visita+"'"+
+                                        	"onclick='botonOjo(this.id)'>"+
+                                        	"<img src='/images/eye.png' width='25' height='25'></img></button>"+
+                                        "<button id="+n.id_visita+" type='button' data-toggle='tooltip' data-placement='top' title='Eliminar' class='btn' style='margin-left:2px;'"+
+                                        	"onclick='eliminar(this)'>"+
+                                        	"<img src='/images/trash.png' width='25' height='25'></img></button>"+
+                                        "<button id="+n.id_visita+" type='button' data-toggle='tooltip' data-placement='top' title='Recomendar' class='btn' style='margin-left:2px;'"+
+                                        	"onclick='recomendar(this)'>"+
+                                        	"<img src='/images/share.png' width='25' height='25'></img></button>"+
+                                    "</div>" +
+                                "</div>"+    
+                            "</li>";
+
+                //Modal asociado a cada Li de cada monumento
+                var infoVisita = "<div id='modalVisi"+n.id_visita+"' class='modal fade' tabindex='-1' role='dialog' aria-labelledby='myLargeModalLabel' aria-hidden='true'>"+
+                                        "<div class='modal-dialog modal-lg' role='document'>"+
+                                            "<div class='modal-content'>"+
+                                                "<div class='modal-header'>"+
+                                                    "<h4 class='tsp1'>"+n.titulo+"</h4>"+
+                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>"+
+                                                        "<span aria-hidden='true'>&times;</span>"+
+                                                    "</button>"+
+                                                "</div>"+
+                                                "<div class='modal-body'>"+
+                                                	"<div class='col-md-12'>"+
+                                                		"<h5 class='tituloVisita'>Descripción:</h5>"+
+                                                		"<p>"+n.descripcion+"</p>"+
+                                                	"</div>"+
+                                                    "<div id='contenidoVisita"+n.id_visita+"'></div>"+
+                                                    "<div class='comentarios col-md-12'>"+
+                                                        "<div id='comentarios"+n.id_visita+"'>"+
+                                                        "</div>"+
+                                                    "</div>"+
+                                                "</div>"+
+                                                "<div class='modal-footer'>"+
+                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>"+
+                                                "</div>"+
+                                            "</div>"+
+                                        "</div>"+
+                                    "</div>";
+
+                $.ajax({
+                    type: "POST",
+                    url:  "/obtenerComentariosVisita",
+                    data: { id : n.id_visita },
+
+                    success: function (data, textStatus, jqXHR) {
+                        var miComentario = "#comentarios"+n.id_visita;
+                        
+                        data.forEach(function(k){
+                            var comentario = "<hr><h5 class='tituloVisita'>Comentarios:</h5><div class='card comentario'>"+
+                                                "<div class='card-body'>"+
+                                                    "<div class='row col-12'>"+
+                                                        "<div class='col-6'>"+
+                                                            "<h5>"+k.nick_autor+"</h5>"+
+                                                        "</div>"+
+                                                        "<div class='col-6'>"+
+                                                            "<p class='text-right font-weight-light'>"+k.fecha+"</p>"+
+                                                        "</div>"+
+                                                    "</div>"+
+                                                    "</hr>"+
+                                                    "<p><em>"+k.texto+"</em></p>"+
+                                                    "</div>"+
+                                                "</div>"+
+                                            "</div>";
+
+                            $(miComentario).append(comentario);
+                        });
+
+                    },
+                    error: function(data, textStatus, jqXHR) {
+                       
+                    }
+                });
+
+                $('#contenidoMisVisitas').append(visita);
+                $('#contenidoMisVisitas').append(infoVisita);
+            });
+        },
+        error: function(data, textStatus, jqXHR) {
+            console.log("sin visitas");
+        }
+    });
+}
+
+
+function cargarRecomendaciones(){
+    $.ajax({
+        type: "GET",
+        url:  "/listarVisitasRecomendadas",
+
+        success: function (data, textStatus, jqXHR) {
+            data.forEach(function (n) {
+                //Convertimos la fecha a un formato más adecuado
+                var f = new Date(n.dia_visita);
+                var fecha = f.toLocaleDateString();
+
+                //CABECERA
+                //Li con cada monumento
+                var visita = "<li id='visita"+ n.id_visita +"' class='list-group-item'>" +
+                                "<div class='row'>"+
+                                    "<div class='col-md-6'>"+
+                                        "<h5 class='tituloVisita'>"+ n.titulo +"</h5>"+
+                                        "<p class='card-text'><small class='text-muted'>valoración: "+n.puntuacion+" ("+n.votos+" votos)</small></p>"+
+                                    "</div>"+
+                                    "<div class='col-md-3'>"+
+                                        "<small class='text-muted'>"+fecha+"</small>"+
+                                    "</div>"+
+                                    "<div class='col-md-3 justify-content-end d-flex'>"+
+                                        "<button id="+n.id_visita+" type='button' class='btn' data-toggle='modal' data-target='#modalVisi"+n.id_visita+"'"+
+                                            "onclick='botonOjo(this.id)'>"+
+                                            "<img src='/images/eye.png' width='25' height='25'></img></button>"+
+                                        "<button id="+n.id_visita+" type='button' data-toggle='tooltip' data-placement='top' title='Eliminar' class='btn' style='margin-left:2px;'"+
+                                            "onclick='eliminarRecomendada(this)'>"+
+                                            "<img src='/images/trash.png' width='25' height='25'></img></button>"+
+                                    "</div>" +
+                                "</div>"+    
+                            "</li>";
+
+                //Modal asociado a cada Li de cada monumento
+                var infoVisita = "<div id='modalVisi"+n.id_visita+"' class='modal fade' tabindex='-1' role='dialog' aria-labelledby='myLargeModalLabel' aria-hidden='true'>"+
+                                        "<div class='modal-dialog modal-lg' role='document'>"+
+                                            "<div class='modal-content'>"+
+                                                "<div class='modal-header'>"+
+                                                    "<h4 class='tsp1'>"+n.titulo+"</h4>"+
+                                                    "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>"+
+                                                        "<span aria-hidden='true'>&times;</span>"+
+                                                    "</button>"+
+                                                "</div>"+
+                                                "<div class='modal-body'>"+
+                                                    "<div class='col-md-12'>"+
+                                                        "<h5 class='tituloVisita'>Descripción:</h5>"+
+                                                        "<p>"+n.descripcion+"</p>"+
+                                                    "</div>"+
+                                                    "<div id='contenidoVisita"+n.id_visita+"'></div>"+
+                                                    "<div class='comentarios col-md-12'>"+
+                                                        "<div id='comentarios"+n.id_visita+"'>"+
+                                                        "</div>"+
+                                                    "</div>"+
+                                                "</div>"+
+                                                "<div class='modal-footer'>"+
+                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cerrar</button>"+
+                                                "</div>"+
+                                            "</div>"+
+                                        "</div>"+
+                                    "</div>";
+
+                $.ajax({
+                    type: "POST",
+                    url:  "/obtenerComentariosVisita",
+                    data: { id : n.id_visita },
+
+                    success: function (data, textStatus, jqXHR) {
+                        var miComentario = "#comentarios"+n.id_visita;
+                        
+                        data.forEach(function(k){
+                            var comentario = "<hr><h5 class='tituloVisita'>Comentarios:</h5><div class='card comentario'>"+
+                                                "<div class='card-body'>"+
+                                                    "<div class='row col-12'>"+
+                                                        "<div class='col-6'>"+
+                                                            "<h5>"+k.nick_autor+"</h5>"+
+                                                        "</div>"+
+                                                        "<div class='col-6'>"+
+                                                            "<p class='text-right font-weight-light'>"+k.fecha+"</p>"+
+                                                        "</div>"+
+                                                    "</div>"+
+                                                    "</hr>"+
+                                                    "<p><em>"+k.texto+"</em></p>"+
+                                                    "</div>"+
+                                                "</div>"+
+                                            "</div>";
+
+                            $(miComentario).append(comentario);
+                        });
+
+                    },
+                    error: function(data, textStatus, jqXHR) {
+                       
+                    }
+                });
+
+                $('#contenidoRecomendaciones').append(visita);
+                $('#contenidoRecomendaciones').append(infoVisita);
+            });
+        },
+        error: function(data, textStatus, jqXHR) {
+            console.log("error");
+        }
+
+    });
+}
+
+
+function recomendar(obj){
+	$('#exampleModal3').modal('toggle');
+
+	var id_visita = obj.id;
+	var botonRec = document.getElementById("botonRecomendar");
+	
+	botonRec.onclick = function buscarusuarioId(){
+		$('.alert').remove();
+		var email = document.getElementById("emailRecomendar").value;
+		var texto = document.getElementById("textoRecomendar").value;
+
+		//Buscamos el email en el servidor
+		$.ajax({
+	        type: "POST",
+	        url:  "/buscarUsuarioEmail",
+	        data: { email : email },
+
+	        success: function (data, textStatus, jqXHR) {
+	        	//Si hemos encontrado el email, le recomendamos la visita
+
+	        	var id_usuario = data[0].id_usuario;
+
+	        	$.ajax({
+			        type: "POST",
+			        url:  "/recomendarVisita",
+			        data: { id_visita : id_visita, id_usuario : id_usuario, texto : texto },
+
+			        success: function (data, textStatus, jqXHR) {
+			        	location.reload();
+			        },
+			        error: function(data, textStatus, jqXHR) {
+			        	location.reload();
+			        }
+		    	});
+	        },
+	        error: function(data, textStatus, jqXHR) {
+	        	$('#emailRecomendar').after('<p class="alert alert-danger">Usuario no encontrado.</p>');
+	        }
+    	});
+	};
+}
+
+function eliminar(obj){
+
+	var id = obj.id;
+
+	bootbox.confirm("¿Estás seguro?, esta acción no se puede deshacer", function(result){ 
+		if(result == true){
+		    $.ajax({
+		        type: "GET",
+		        url:  "/eliminarVisita",
+		        data: { id : id },
+
+		        success: function (data, textStatus, jqXHR) {
+		        	location.reload();
+		        },
+		        error: function(data, textStatus, jqXHR) {
+		        	alert("Ha ocurrido un error inesperado al intentar borrar tu visita.");
+		        }
+
+		    }); 
+		}
+	});
+}
+
+function eliminarRecomendada(obj){
+    console.log(obj.id);
+    var id = obj.id;
+
+    bootbox.confirm("¿Estás seguro?, esta acción no se puede deshacer", function(result){ 
+        if(result == true){
+            $.ajax({
+                type: "GET",
+                url:  "/eliminarVisitaRecomendada",
+                data: { id : id },
+
+                success: function (data, textStatus, jqXHR) {
+                    location.reload();
+                },
+                error: function(data, textStatus, jqXHR) {
+                    alert("Ha ocurrido un error inesperado al intentar borrar tu visita.");
+                }
+
+            }); 
+        }
+    });
+}
+
+function botonOjo(id){
+    $.ajax({
+        type: "POST",
+        url:  "/obtenerInfoVisita",
+        data: { id : id },
+
+        success: function (data, textStatus, jqXHR) {
+
+            var miModal = "modalMonu"+id;
+            var miDiv = "#contenidoVisita"+id;
+
+            $(miDiv).html("");
+
+            data.forEach(function(n){
+
+                var sitio = "<li class='list-group-item'>"+
+                                "<div class='row  justify-content-end col-md-12'>"+
+                                    "<div class='col-md-10'>"+
+                                        "<h6 class='tituloVisita'>"+n.nombre+"</h6>"+
+                                        "<button id='"+n.id_monumento+"' type='button' data-toggle='tooltip' data-placement='top' title='Ver mapa del sitio' class='btn sp1' onclick='generarMapa(this, this.id,"+n.latitud+", "+n.longitud+")'>"+
+                                            "<img onload=this.style.display='block' src='/images/map3.png' width='25' height='25'></img></button>"+
+                                        "<button id='"+n.id_monumento+"' type='button' data-toggle='tooltip' data-placement='top' title='Ver descripción del sitio' class='btn sp1' style='margin-left:6px;' onclick='verInfoSitio(this)'>"+
+                                            "<img onload=this.style.display='block' src='/images/eye3.png' width='25' height='25' ></img></button>"+       
+                                    "</div>"+
+                                    "<div class='col-md-2'>dsadsa"+
+
+                                    "</div>"+
+                                "<div class='infoSitio border rounded bsp1' id='sitio"+n.id_monumento+"' style='margin-top:6px;'>"+
+                                    "<div class='contenidoDesc'>"+
+                                        "<p class='font-weight-bold'>Descripcion: </p> <p>"+ n.descripcion +"</p>"+
+                                        "<p class='font-weight-bold'>Horario: </p>"+ n.horario +"</p>"+
+                                        "<p class='font-weight-bold'>Calle: </p>"+ n.calle +"</p>"+
+                                        "<p>Puedes encontrar más información en  <a target='_blank' href='"+n.url+"'> la web del ayuntamiento de Madrid </a>.</p>"+
+                                    "</div>"+
+                                "</div>"+
+                                "</div>"+
+                                "<div class='mapCont' id='mapCont"+n.id_monumento+"' style='width:400px; height:300px; display: none;'>"+
+                                    "<div class='map' id='map"+n.id_monumento+"'></div>"+
+                                "</div>"+
+                            "</li>";
+
+                $(miDiv).append(sitio);
+            });
+
+            $('#miModal').modal();
+            $(".infoSitio").hide();
+        },
+        error: function(data, textStatus, jqXHR) {
+            alert("fallo");
+        }
+    });
+}
+
+function verInfoSitio(obj){
+    var sitio = "#sitio" + obj.id;
+
+    $(sitio).toggle();
+}
+
+function generarMapa(obj, id, latitud, longitud){
+
+    //mostramos el contenido del mapa:
+    var cont2 = "#mapCont"+id;
+    $(cont2).toggle();
+
+    var boton = document.getElementById(id);
+
+
+    //mostramos el boton de ocultar el mapa:
+    //llamamos a la API mapbox para que nos devuelva el mapa con las coordenadas correspondientes:
+    var cont = "map"+id;
+    mapboxgl.accessToken = 'pk.eyJ1IjoiaWt1IiwiYSI6ImNqcGwxcjgwMTA4dDQzeHMxeDNpa3VweTkifQ.rrmmbiwC7oMHj_jxvxz2HA';
+    var map = new mapboxgl.Map({
+        container: cont, // container id
+        style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
+        center: [longitud, latitud], // starting position [lng, lat]
+        zoom: 16 // starting zoom
+    });
+}
+
+function mostrarMenuLugares(){
+	//Reseteamos contenido del modal
+	//$("#nuevoLugar").html("");
+	$("#nuevaVisita").hide();
+}
+
+function botonListarMuseos(){
+
+	$("#accordion").html("");
+	$("#ocultarMuseos").show();
+
+    $.ajax({
+        type: "GET",
+        url:  "/listarMuseos",
+
+        success: function (data, textStatus, jqXHR) {      	
+            data.forEach(function (n) {
+
+            	var museo2 = $("<div id="+ n.id_monumento +" class='card card-museos'>" +
+ 							 "<div class='card-header' id='heading"+n.id_monumento+"'>" +
+ 							 "<h5 class='mb-0'>" + 
+	 							 "<button class='btn btn-link collapsed' data-toggle='collapse' data-target='#collapse"+n.id_monumento+"' aria-expanded='false'"+
+	 							 "aria-controls='collapseTwo'>" + n.nombre + "</button>" +
+	 							 "<button id="+n.id_monumento+" type='button' data-dismiss='modal' onclick='botonAddItem(this);' class='btn btn-success float-right'>+ Añadir</button>" +
+	 						 "</h5>" +
+	 						 "</div>" +
+	 						 "<div id='collapse"+n.id_monumento+"' class='collapse' aria-labelledby='heading"+n.id_monumento+"' data-parent='#accordion'>" +
+	 						 "<div class='card-body'>"  +
+	 						 	"<p>Dirección: " + n.calle + "</p>" +
+	 						 	"<p>Mas info en: <a target='_blank' href='"+n.url+"'> OpenDataMadrid </a></p>" +
+	 						 	"<a class='btn btn-primary sp1' data-toggle='collapse' href='#collapseDesc" + n.id_monumento + "' role='button' aria-expanded='false' aria-controls='collapseExample'>ver descripcion</a>" +
+	 						 	"<div class='collapse' id='collapseDesc"+ n.id_monumento +"'>" +
+	 						 		"<div class='card card-body'><em>" + n.descripcion + "</em></div></div>" +
+	 						 "</div></div></div></div>"
+	 						 );
+
+                $('#accordion').append(museo2);
+            });
+
+        },
+        error: function(data, textStatus, jqXHR) {
+        }
+
+    });
+}
+
+function botonOcultarMuseos(){
+	$('.card-museos').remove();
+	$("#ocultarMuseos").hide();
+}
+
+function botonListarTemplos(){
+
+	$("#accordion3").html("");
+	$("#ocultarTemplos").show();
+
+    $.ajax({
+        type: "GET",
+        url:  "/listarTemplos",
+
+        success: function (data, textStatus, jqXHR) {      	
+            data.forEach(function (n) {
+
+            	var templo = $("<div id="+ n.id_monumento +" class='card card-templos'>" +
+ 							 "<div class='card-header' id='heading"+n.id_monumento+"'>" +
+ 							 "<h5 class='mb-0'>" + 
+	 							 "<button class='btn btn-link collapsed' data-toggle='collapse' data-target='#collapse"+n.id_monumento+"' aria-expanded='false'"+
+	 							 "aria-controls='collapseTwo'>" + n.nombre + "</button>" +
+	 							 "<button id="+n.id_monumento+" type='button' data-dismiss='modal' onclick='botonAddItem(this);' class='btn btn-success float-right'>+ Añadir</button>" +
+	 						 "</h5>" +
+	 						 "</div>" +
+	 						 "<div id='collapse"+n.id_monumento+"' class='collapse' aria-labelledby='heading"+n.id_monumento+"' data-parent='#accordion'>" +
+	 						 "<div class='card-body'>"  +
+	 						 	"<p>Dirección: " + n.calle + "</p>" +
+	 						 	"<p>Mas info en: <a target='_blank' href='"+n.url+"'> OpenDataMadrid </a></p>" +
+	 						 	"<a class='btn btn-primary sp1' data-toggle='collapse' href='#collapseDesc" + n.id_monumento + "' role='button' aria-expanded='false' aria-controls='collapseExample'>ver descripcion</a>" +
+	 						 	"<div class='collapse' id='collapseDesc"+ n.id_monumento +"'>" +
+	 						 		"<div class='card card-body'><em>" + n.descripcion + "</em></div></div>" +
+	 						 "</div></div></div></div>"
+	 						 );
+
+                $('#accordion3').append(templo);
+            });
+
+        },
+        error: function(data, textStatus, jqXHR) {
+        }
+
+    });
+}
+
+function botonOcultarTemplos(){
+	$('.card-templos').remove();
+	$("#ocultarTemplos").hide();
+}
+
+function botonListarEdificioM(){
+
+	$("#accordion4").html("");
+	$("#ocultarEdificioM").show();
+
+    $.ajax({
+        type: "GET",
+        url:  "/listarEdificioM",
+
+        success: function (data, textStatus, jqXHR) {      	
+            data.forEach(function (n) {
+
+            	var EdificioM = $("<div id="+ n.id_monumento +" class='card card-EdificioM'>" +
+ 							 "<div class='card-header' id='heading"+n.id_monumento+"'>" +
+ 							 "<h5 class='mb-0'>" + 
+	 							 "<button class='btn btn-link collapsed' data-toggle='collapse' data-target='#collapse"+n.id_monumento+"' aria-expanded='false'"+
+	 							 "aria-controls='collapseTwo'>" + n.nombre + "</button>" +
+	 							 "<button id="+n.id_monumento+" type='button' data-dismiss='modal' onclick='botonAddItem(this);' class='btn btn-success float-right'>+ Añadir</button>" +
+	 						 "</h5>" +
+	 						 "</div>" +
+	 						 "<div id='collapse"+n.id_monumento+"' class='collapse' aria-labelledby='heading"+n.id_monumento+"' data-parent='#accordion'>" +
+	 						 "<div class='card-body'>"  +
+	 						 	"<p>Dirección: " + n.calle + "</p>" +
+	 						 	"<p>Mas info en: <a target='_blank' href='"+n.url+"'> OpenDataMadrid </a></p>" +
+	 						 	"<a class='btn btn-primary sp1' data-toggle='collapse' href='#collapseDesc" + n.id_monumento + "' role='button' aria-expanded='false' aria-controls='collapseExample'>ver descripcion</a>" +
+	 						 	"<div class='collapse' id='collapseDesc"+ n.id_monumento +"'>" +
+	 						 		"<div class='card card-body'><em>" + n.descripcion + "</em></div></div>" +
+	 						 "</div></div></div></div>"
+	 						 );
+
+                $('#accordion4').append(EdificioM);
+            });
+
+        },
+        error: function(data, textStatus, jqXHR) {
+        }
+
+    });
+}
+
+function botonOcultarEdificioM(){
+	$('.card-EdificioM').remove();
+	$("#ocultarEdificioM").hide();
+}
+
+function botonAddItem(obj){
+
+	var id_item = obj.id;
+	$("#nuevaVisita").show();
+
+    lugares.push(id_item);
+
+    cargarItems(id_item);
+}
+
+function cargarItems(id_lugar){
+	$.ajax({
+        type: "POST",
+        url:  "/cargarItems",
+        data: { id_lugar : id_lugar },
+
+        success: function (data, textStatus, jqXHR) {    	
+        	var sitio = $("<div id="+ data[0].id_monumento +" class='card card-museos listaMuseos'>"+
+        					"<div class='card-header'>"+
+        					"<h5>"+ data[0].nombre +"<h5>" +
+        					"<button id=quitar"+ data[0].id_monumento +" onclick='deleteItem(this);' type='button' class='btn btn-success float-right'>- Quitar</button>"+
+        					"</div></div>"
+ 						 );
+        	$('#accordion2').append(sitio);
+        },
+        error: function(data, textStatus, jqXHR) {
+        }
+
+    });
+}
+
+function validarVisita(){
+
+	var titulo = document.getElementsByName("tituloVisita")[0].value;
+	var descripcion = document.getElementsByName("breveDesc")[0].value;
+	var validar = true;
+
+	$('.alert').remove();
+
+	//Validaciones del título:
+	if(titulo == ""){
+		$('#tituloVisita').after('<p class="alert alert-danger">Debes introducir un título válido.</p>');
+		validar = false;
+	} else if (titulo.length > 40){
+		$('#tituloVisita').after('<p class="alert alert-danger">El título es demasiado largo.</p>');
+		validar = false;
+	};
+
+	//Validaciones de lugares:
+	if (lugares.length < 1){
+		$('#accordion2').after('<p class="alert alert-danger">Debes introducir al menos un lugar a visitar.</p>');
+		validar = false;
+	} else if (lugares.length > 9){
+		$('#accordion2').after('<p class="alert alert-danger">Has introducido demasiados lugares.</p>');
+		validar = false;
+	}
+
+	//Validaciones de descripcion
+	if (descripcion.length < 20){
+		$('#breveDesc').after('<p class="alert alert-danger">Introduce una descripción.</p>');
+		validar = false;
+	}
+
+	if(!validar){
+		$('#botonCrear').after('<p class="alert alert-danger">No has rellenado alguno de los campos clave</p>');
+	} else{
+		crearVisita();
+	}
+}
+
+function crearVisita(){
+	var museos = [];
+
+	$('.listaMuseos').each(function () {          
+        museos.push($(this).attr('id'));
+    });
+	var tituloVisita = document.getElementsByName("tituloVisita")[0].value;
+	var tag1 = document.getElementsByName("tag1")[0].value;
+	var tag2 = document.getElementsByName("tag2")[0].value;
+	var tag3 = document.getElementsByName("tag3")[0].value;
+	var desc = document.getElementsByName("breveDesc")[0].value;
+
+	$.ajax({
+        type: "POST",
+        url:  "/crearVisita",
+        data: { 
+        	museos : museos, 
+        	tituloVisita : tituloVisita, 
+        	tag1 : tag1, 
+        	tag2 : tag2, 
+        	tag3 : tag3, 
+        	desc : desc 
+        },
+
+        success: function (data, textStatus, jqXHR) {    
+        	window.location.reload()	
+        },
+        error: function(data, textStatus, jqXHR) {
+        }
+
+    });
+}
+
+  
+    
+  

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <%- include('header') %>
+
+    <script src="js/administracion.js"></script>
+
+    <div class="card panel-default" id="registro" class="ventana">
+        <div id="titulo"><h3> Panel de administrador </h3></div>
+        <hr />
+        <div class="contenidoVentana">
+            <div id="buscador" class="input-group mb-3">
+              <div class="input-group-prepend">
+                <button id="botonBuscar" class="btn btn-outline-secondary sp1" type="button">Buscar Usuario</button>
+                <button class="btn btn-info dropdown-toggle sp1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="/images/info-icon.png" width="20" height="20"></button>
+                  <div class="dropdown-menu">
+                    <p class="textoAyuda">Introduce el email o el nombre del usuario que deseas buscar.</p>
+                  </div>
+              </div>
+              <input id="textoBuscar" name="buscarTexto" type="text" class="form-control" placeholder="ej. ejemplo@ucm.es" aria-label="" aria-describedby="basic-addon1">
+            </div>
+            <button id="botonListar" class="btn btn-outline-secondary sp1" type="button">Listar Usuarios</button>
+            <hr />   
+            <div id="separador"></div>
+            <span id="mensaje"></span>
+                <div class="contenidoVentana">
+                    <table id="tablaUsuarios" class="table table-hover">
+                        <thead>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <ul id="pag" class="pagination">
+                    </ul>
+                </div>
+        </div>
+
+        <!-- MODAL INFO USUARIO -->
+        <div id="modalInfoUsuario" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div id="modalContent" class="modal-content">
+                <div class="modal-header">
+                    <div id="contenidoHeader">
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="col-12">
+                        <h4>Visitas asociadas:</h4>
+                    </div>
+                    <div id="contenidoVisitas">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+          </div>
+        </div>
+
+    </div>
+  </body>
+
+  <%- include('footer') %>
+
+</html>

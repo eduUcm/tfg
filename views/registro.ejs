@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <%- include('header') %>
+
+    <script src="js/registro.js"></script>
+
+    <div class="card panel-default" id="registro" class="ventana">
+        <div id="titulo"><h3> Nuevo usuario </h3></div>
+        <hr />
+        <div class="contenidoVentana">
+            <form id="miFormulario" class="form-horizontal" role="form" method="POST">
+                <div class="form-group">
+                    <div>
+                        <input type="email" name="email" class="form-control formP" id="correoReg" placeholder="Email">
+                    </div>
+                    <div>
+                        <input type="text" name="nick" class="form-control formP" id="nick" placeholder="Nick">
+                    </div>
+                    <div id="separador"></div>
+                    <div>
+                        <input type="text" name="nombre" class="form-control formP" id="nick" placeholder="Nombre">
+                    </div>
+                    <div>
+                        <input type="text" name="apellidos" class="form-control formP" id="nick" placeholder="Apellidos">
+                    </div>
+                    <div id="separador"></div>
+                    <div>
+                        <input type="password" name="password" class="form-control formP" id="password" placeholder="contraseña">
+                    </div>
+                    <div>
+                        <input type="password" name="confirm_password" class="form-control formP" id="confirm_password" placeholder="confirma contraseña">
+                    </div>
+                    <span id='message'></span> <br> <span id='message2'></span>                       
+                </div>
+                <!-- Botonera -->
+                <div id="botoneraReg" class="form-group botonera" align="center">
+                    <button id="crearUsuario" type="submit" class="btn btn-primary sp1" style="margin:5px;"><span class="textPrincipal">Crear nuevo usuario<span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+  </body>
+
+  <%- include('footer') %>
+
+</html>

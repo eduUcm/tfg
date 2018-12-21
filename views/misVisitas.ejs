@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <%- include('header') %>
+
+    <script src="js/misVisitas.js"></script>
+
+    <body>
+
+    <div class="card panel-default" id="misvisitas" class="ventana">
+        <div id="titulo"><h3> Mis Visitas </h3></div>
+        <!-- boton nueva visita -->
+        <div id="botonNuevaVisita" class="form-group botonera" align="left">
+            <button id="crearUsuario" type="submit" class="btn btn-primary sp1" data-toggle="modal" data-target="#nuevaVisita" style="margin:5px;"><span class="textPrincipal">+ Crear nueva visita<span></button>
+        </div>
+        <hr />
+        <div id="contenidoMisVisitas">
+            <div class='row'>
+                <div class='col-md-6'>
+                    <p>Título de la visita</p>
+                </div>
+                <div class='col-md-3'>
+                    <p>Fecha de la visita</p>
+                </div>
+                <div class='col-md-3 justify-content-end d-flex'>
+                    <p>Opciones</p>
+                </div>
+            </div>
+        </div>
+
+            <!-- MODAL PARA NUEVA VISITA -->
+            <div class="modal fade" id="nuevaVisita" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <!-- CABECERA NUEVA VISITA -->
+                        <div class="modal-header">
+                            <div>
+                                <h4 class="tsp1 modal-title">Crear una nueva visita
+                                    <button class="btn btn-info  sp1" type="button" data-toggle="dropdown">?</button>
+                                        <div class="dropdown-menu">
+                                            <p class="textoAyuda">Las visitas consisten en una serie de lugares a visitar a lo largo de un día, por lo tanto debes 
+                                            seleccionar cuidadosamente los lugares teniendo en cuenta cuánto se tardará en llevar a cabo cada uno, y cuanto se tardará en desplazarse de uno a otro.</p>
+                                        </div> 
+                                </h4>
+                            </div>                  
+                                  <button type="button" class="btn btn-danger" data-dismiss="modal">X</button>
+                        </div>
+                        <!-- CABECERA NUEVA VISITA -->
+
+                        <!-- CUERPO NUEVA VISITA -->
+                        <div>
+                            <form id="formularioCrearVisita" class="form-horizontal" role="form" method="POST">
+                                <h5>Datos de la visita</h5> <hr>
+                                <div class="col-sm-12" id="datosVisita">
+                                    <div class="form-group">
+                                        <label  class="col-sm-4 control-label" for="tituloVisita">Título de la visita(*):</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control" name="tituloVisita" id="tituloVisita" placeholder="Ej:  Visita rápida para un fin de semana"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label" for="tag">Tags:</label>
+                                        <div class="row justify-content-center">
+                                            <div class="col col-sm-3">
+                                                <input type="text" class="form-control" name="tag1" id="tag1" placeholder="Ej:  rapida"/>
+                                            </div>
+                                            <div class="col col-sm-3">
+                                                <input type="text" class="form-control" name="tag2" id="tag2" placeholder="Ej:  cultural"/>
+                                            </div>
+                                            <div class="col col-sm-3">
+                                                <input type="text" class="form-control" name="tag3" id="tag3" placeholder="Ej:  familiar"/>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    <div class="form-group">
+                                        <label  class="col-sm-4 control-label" for="diaVisita">Día de la visita:</label>
+                                        <div class="col-lg-6">
+                                            <input id="datepicker" class="form-control" name="diaVisita" width="300" />
+                                        </div>                           
+                                    </div>
+                                    <div class="form-group">
+                                        <label  class="col-sm-12 control-label" for="breveDesc">Breve descripción de la vista:</label>
+                                        <div class="col-lg-12">
+                                            <textarea class="form-control" name="breveDesc" id="breveDesc" rows="3"></textarea>
+                                        </div>                           
+                                    </div>
+                                </div>
+                                <hr> <h5>Lugares a visitar</h5> <hr>
+                                <div id="datosVisita">
+                                    <div id="accordion2">
+                                    </div>
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button id="anadirLugar" type="button" class="btn btn-primary sp1" data-toggle="modal" data-target="#nuevoLugar" style="margin:5px;"><span class="textPrincipal">Añadir lugar<span></button>
+                                    </div>
+                                </div>
+                        </div>
+                            <div class="form-group">
+                                <hr>
+                                <div class="col-sm-offset-2 col-sm-10">
+                                  <button id="botonCrear" type="button" class="btn btn-default sp1">Crear</button>
+                                </div>
+                            </div>
+                         </form>
+                         <!-- CUERPO NUEVA VISITA -->
+                  </div>
+                </div>
+            </div>
+            <!-- MODAL PARA NUEVA VISITA -->   
+
+
+            <!-- MODAL NUEVO LUGAR-->
+            <div class="modal fade" id="nuevoLugar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content"> 
+                    <!-- CABECERA NUEVO LUGAR-->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Categorías</h5>
+                        <button type="button" class="close nuevoLugarCancelar" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <!-- CABECERA NUEVO LUGAR-->
+
+                    <!-- CUERPO NUEVO LUGAR-->
+                    <div class="modal-body">
+                        <!-- MUSEOS-->
+                        <div class="card mb-3">
+                            <img class="card-img-top" src="/images/museos.png" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">Museos</h5>
+                                <p class="card-text">Museos dentro de los límites de la ciudad de Madrid.</p>
+                                <div id=botoneraCategoriasM">
+                                    <button id="listarMuseos" type="button" class="btn btn-primary sp1">Listar</button>
+                                    <button id='ocultarMuseos' type='button' class='btn btn-primary sp1 botonOcultar'>Ocultar</button>
+                                </div>
+                            </div>
+                            <div id="accordion">
+
+                            </div>
+                        </div>
+                        <!-- MUSEOS-->
+
+                        <!-- TEMPLOS-->
+                        <div class="card mb-3">
+                              <img class="card-img-top" src="/images/iglesias.png" alt="Card image cap">
+                              <div class="card-body">
+                                <h5 class="card-title">Iglesias</h5>
+                                <p class="card-text">Iglesias dentro de los límites de la ciudad de Madrid.</p>
+                                <div id=botoneraCategoriasM">
+                                        <button id="listarTemplos" type="button" class="btn btn-primary sp1">Listar</button>
+                                        <button id='ocultarTemplos' type='button' class='btn btn-primary sp1 botonOcultar'>Ocultar</button>
+                                </div>
+                                <div id="accordion3">
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- TEMPLOS-->
+
+                        <!-- EDIFICIOS MONUMENTALES-->
+                        <div class="card mb-3">
+                              <img class="card-img-top" src="/images/edificiosM.png" alt="Card image cap">
+                              <div class="card-body">
+                                <h5 class="card-title">Edificios monumentales</h5>
+                                <p class="card-text">Grandes e icónicos edificios o lugares de la ciudad de madrid.</p>
+                                <div id=botoneraCategoriasM">
+                                        <button id="listarEdificioM" type="button" class="btn btn-primary sp1">Listar</button>
+                                        <button id='ocultarEdificioM' type='button' class='btn btn-primary sp1 botonOcultar'>Ocultar</button>
+                                </div>
+                                <div id="accordion4">
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- EDIFICIOS MONUMENTALES-->  
+
+                    </div>
+                    <!-- CABECERA NUEVO LUGAR-->
+f
+                    <!-- FOOTER NUEVO LUGAR-->
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary nuevoLugarCancelar" data-dismiss="modal">Cancelar</button>
+                  </div>
+                  <!-- FOOTER NUEVO LUGAR-->
+                </div>
+              </div>
+            </div>
+            <!-- FIN MODAL NUEVO LUGAR-->
+
+
+            <!-- Modal menu de visita -->
+            <div class="modal fade" id="myModal">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                      <button id="eliminarVisita" type='button' class='btn btn-outline-danger'>&#10005; Eliminar</button>
+                      <button type='button' class='btn btn-outline-primary'>&#9998; Modificar</button>
+                      <button type='button' class='btn btn-outline-primary'>&#9998; Recomendar</button>
+                      <button type="button" class="close" data-dismiss="modal">×</button>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                function deleteItem(id) {
+                    $(id).parent().parent().parent().remove();
+                };
+            </script>
+            <!-- FIN Modal menu de visita -->
+
+        </div>
+    </div>
+
+    <div class="card panel-default ventanaPrincipal" id="misRecomendaciones">
+        <div id="titulo"><h3> Recomendaciones recibidas </h3></div>
+        <hr />
+            <div id="contenidoRecomendaciones">
+            </div>
+
+        <!-- MODAL RECOMENDAR VISITA -->
+        <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Recomienda esta visita</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Email del receptor:</label>
+                    <input type="email" class="form-control" id="emailRecomendar">
+                  </div>
+                  <div class="form-group">
+                    <label for="message-text" class="col-form-label">Mensaje:</label>
+                    <textarea class="form-control" id="textoRecomendar"></textarea>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button id="botonRecomendar" type="button" class="btn btn-primary sp1">Enviar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- FIN MODAL RECOMENDAR VISITA -->
+    </div>
+
+  </body>
+
+  <%- include('footer') %>
+
+</html>

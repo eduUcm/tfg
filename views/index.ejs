@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<%- include('header') %>
+
+	<script src="js/index.js"></script>
+
+	<div class="background-image">
+	<body>
+		<div class="contenedorPrincipal">
+			<div class="card panel-default ventanaPrincipal" id="buscarVisitas">
+		        <div id="titulo"><h3> Encuentra una visita </h3></div>
+		        <!-- boton nueva visita -->
+		        <hr />
+		        <div>
+		        	<label class="form-check-label" for="buscarClave">Buscar por palabra clave:</label>
+					<div id="filtroBusqueda" class="input-group mb-3">					
+						<input id="buscarClave" type="text" class="form-control" placeholder="búsqueda" aria-label="Recipient's username" aria-describedby="basic-addon2">
+					 	<div class="input-group-append">
+					    	<button id="botonBuscar" class="btn btn-outline-secondary sp1" type="button">Buscar</button>
+						</div>
+					</div>
+			        <hr />
+			        <div id="ContenidoVisitasBuscadas">
+			        </div>
+		        </div>
+		    </div>
+
+			<div class="card panel-default ventanaPrincipal" id="misvisitas">
+		        <div id="titulo"><h3> Visitas mejor valoradas </h3></div>
+		        <!-- boton nueva visita -->
+		        <hr />
+		        <div id="ContenidoVisitas">
+		        </div>
+		    </div>
+	    </div>
+	</body>
+	</div>
+
+	<%- include('footer') %>
+
+</html>

@@ -1,0 +1,352 @@
+* {
+  border-radius: 0 !important;
+}
+
+/*
+	BODY
+*/
+
+body{
+	/*background-image:url(/images/light.png);*/
+	/*margin-top: 200px;*/
+}
+
+.contenedorPrincipal{
+	background-color: white;
+	margin: 0% 20% 0% 20%;
+}
+
+.textoAyuda{
+	margin: 1%;
+}
+
+.tsp1{
+	color: white;
+}
+
+.alertmsj{
+transition-delay: 2s;
+}
+
+.contenidoDesc{
+	padding: 2%;
+}
+
+.ventanaPrincipal{
+	margin: 5% 20% 5% 20%;
+	padding: 0% 1% 1% 1%;
+}
+
+/*
+	ESTILOS DEL MENU DE NAVEGACION
+*/
+
+.navbar{
+	/*
+	background-image: url(/images/madrid.jpg);
+	background-position: center; 
+	background-attachment: ;
+	
+	overflow: hidden;
+	z-index: 1000;
+  	background-color: #333;
+  	position: fixed; 
+  	top: 0; 
+  	width: 100%; 
+  	*/
+}
+
+#botonLoginNav{
+	margin-right: 80px;
+	color: #815189;
+}
+
+#botonUnlogNav{
+	margin-right: 80px;
+	color: #815189;
+}
+
+#navBoton{
+	line-height: 2px;
+}
+
+.navBotonIz{
+	-webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+
+.btn-change{
+    float: left;
+    box-shadow: 0 0 1px #ccc;
+    -webkit-transition: all 0.2s ease-in-out;
+    border: 0px;
+    color: #fff;
+}
+.btn-change:hover{
+    /*-webkit-transform: scale(1.1);*/
+    background: lightseagreen !important;
+}
+
+.navbar-login
+{
+    width: 200px;
+    padding: 10px;
+    padding-bottom: 0px;
+}
+
+.navbar-login-session
+{
+    padding: 10px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+.icon-size
+{
+    font-size: 87px;
+}
+
+
+/*
+	ESTILOS DEL PANEL DE LOGIN
+*/
+#login{
+	margin: 5% 40% 10% 40%;
+	padding: 0% 1% 1% 1%;
+}
+
+#fondo{}
+
+#titulo{
+	margin-top: 5%;
+	text-align: center;
+	color: #815189;
+}
+
+#botonForm{
+	min-width: 180px;
+    max-width: 180px;
+}
+
+.botonera{
+	margin-top: 15%;
+}
+
+.textPrincipal{
+	font-weight: bold;
+}
+
+.contenidoVentana{
+	padding: 0% 5% 0% 5%;
+}
+
+.error{
+	padding: 1% 0% 3% 0%;
+	color: red;
+	text-align: center;
+}
+
+.sp2{
+	border-color: lightgrey !important;
+	border: 1px;
+}
+
+.sp1{
+	background: #ab78b3 !important;
+	border: none !important;
+	color: white;
+}
+
+.sp1:hover{
+	background: #815189 !important;
+	border: none !important;
+}
+
+.bsp1{
+	border-color: #815189;
+}
+
+/*
+	ESTILOS DEL PANEL DE REGISTRO
+*/
+#registro{
+	margin: 5% 30% 20% 30%;
+	padding: 0% 1% 1% 1%;
+}
+
+.formP{
+	margin-bottom: 10px;
+}
+
+#separador{
+	margin-top: 35px;
+}
+
+#botoneraReg{
+	margin-top: -20px;
+}
+
+
+/*
+	ERRORES
+*/
+
+#alertaSeguridad{
+	margin: 2% 30% 2% 30%;
+}
+
+/*
+	MIS VISITAS
+*/
+
+#botonNuevaVisita{
+	margin-top: 20px;
+	margin-bottom: -15px;
+}
+
+#formularioCrearVisita{
+	margin-left: 10%;
+	margin-right: 10%;
+	margin-top: 2%;
+}
+
+#datosVisita{
+	padding: 0% 5% 0 5%;
+}
+
+#misvisitas{
+	margin: 5% 20% 5% 20%;
+	padding: 0% 1% 1% 1%;
+}
+
+th{
+	background: #ab78b3  !important;
+}
+
+table {
+	text-align: center;
+}
+
+.modal-dialog {
+  min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: auto;
+  @media(max-width: 768px) {
+    min-height: calc(100vh - 20px);
+  }
+}
+
+
+
+
+#headingTwo{
+	display: inline;
+}
+
+h5{
+	display: inline;
+	text-align: center;
+	vertical-align: middle;
+}
+
+h4{
+	color: #815189;
+}
+
+.sp5:hover{
+	-webkit-transform: scale(1.4);
+}
+
+#aaa{
+	 width: 100%;
+	float: left;
+	clear: none;
+	display:inline;
+}
+
+#iz{
+	vertical-align: middle;
+	float:left;
+}
+
+#der{
+	text-align: center;
+	vertical-align: middle;
+	float:right;
+}
+
+
+/*
+	SITIOS
+*/
+
+#contenidoFiltro{
+	padding: 2%;
+}
+
+.comentario{
+	margin: 2%;
+}
+
+.map {
+	position:relative; 
+	float: center;
+	width:	400px;
+	height: 300px;
+}
+.mapCont{
+	position:relative; 
+	float: center;
+	width:	400px;
+	height: 300px;
+}
+
+.tituloVisita{
+	color: #815189;
+}
+
+.modal-header{
+	background-color: #815189;
+}
+
+/*
+	ADMIN
+*/
+
+thead th{
+	color:white;
+}
+
+.modal{
+    overflow-y: auto;
+}
+
+.modal:nth-of-type(even) {
+    z-index: 1042 !important;
+}
+.modal-backdrop.in:nth-of-type(even) {
+    z-index: 1041 !important;
+}
+
+
+/*
+	FOOTER
+*/
+
+#footer{
+	background-color: #f8f9fa;
+    position:relative;
+}
+
+#contenidoFooter{
+	margin-right: 20%;
+	margin-left: 20%;
+	margin-bottom: 1%;
+}
+
+footer p{
+	color: #815189;
+	font-size: 15px;
+	text-align: center;
