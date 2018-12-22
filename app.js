@@ -739,6 +739,28 @@ app.get("/listarVisitasUsuario", function(request, response) {
 });
 
 /*
+    Lista todas las visitas del usuario seleccionado por el administrador.
+*/
+app.post("/eliminarComentario", function(request, response) {
+    if(typeof request.session.logueado != 'undefined' && request.session.userData.rol == "admin"){
+        var id_comentario = request.body.id;
+
+        nCon.eliminarComentario(id_comentario, function(err, result){
+            if (result) { 
+                response.status(200);
+                response.end();
+            } else {
+                response.status(404);
+                response.end();
+            }
+        });
+    } else{
+        response.status(404);
+    }
+});
+
+
+/*
     **************************** SITIOS ****************************
 
     Manejadores de ruta del módulo sitios

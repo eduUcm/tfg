@@ -124,6 +124,7 @@ function buscarVisita(){
                                                                     "</div>"+
                                                                     "<div class='col-6'>"+
                                                                         "<p class='text-right font-weight-light'>"+k.fecha+"</p>"+
+                                                                        "<p>HOOOLA</p>"    
                                                                     "</div>"+
                                                                 "</div>"+
                                                                 "<hr>"+
@@ -265,14 +266,22 @@ function cargarVisitas(){
                                     var comentario = "<div class='card comentario'>"+
                                                         "<div class='card-body'>"+
                                                             "<div class='row col-12'>"+
-                                                                "<div class='col-6'>"+
+                                                                "<div class='col-4'>"+
                                                                     "<h5>"+k.nick_autor+"</h5>"+
                                                                 "</div>"+
-                                                                "<div class='col-6'>"+
-                                                                    "<p class='text-right font-weight-light'>"+k.fecha+"</p>"+
+                                                                "<div class='row col-8 justify-content-end d-flex'>"+
+                                                                    "<div class='col-6'>"+
+                                                                        "<p class='text-right font-weight-light'>"+k.fecha+"</p>"+
+                                                                    "</div>"+
+                                                                    "<div class='col-2 justify-content-end d-flex'>"+
+                                                                        "<button id="+k.id_comentario+" type='button' data-toggle='tooltip' data-placement='top' title='Eliminar' class='btn' style='margin-left:2px;'"+
+                                                                        "onclick='eliminarComentario(this)'>"+
+                                                                        "<img src='/images/trash.png' width='25' height='25'></img></button>"+
+                                                                    "</div>"+
                                                                 "</div>"+
                                                             "</div>"+
                                                             "<hr>"+
+                                                            "<div id='errorComentario'></div>"+
                                                             "<p><em>"+k.texto+"</em></p>"+
                                                         "</div>"+
                                                     "</div>";
@@ -402,6 +411,21 @@ function botonComentario(id){
         },
         error: function(data, textStatus, jqXHR) {
             alert("fallo al insertar comentario");
+        }
+    });
+}
+
+function eliminarComentario(obj){
+    $.ajax({
+        type: "POST",
+        url:  "/eliminarComentario",
+        data: { id : obj.id},
+
+        success: function (data, textStatus, jqXHR) {
+            location.reload();
+        },
+        error: function(data, textStatus, jqXHR) {
+            $('#errorComentario').after('<p class="alert alert-danger">Error al borrar el comentario.</p>');
         }
     });
 }

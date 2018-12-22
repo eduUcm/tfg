@@ -619,7 +619,7 @@ class ConexionBD {
     insertarComentario(datosComentario, callback) {
         this.pool.getConnection((err, connection) => {
             if (err) {
-                //connection.release();
+                connection.release();
                 callback(err);
             } else {
                 connection.query("INSERT INTO comentarios(id_visita, texto, nick_autor, fecha) VALUES (?,?,?,?)",
@@ -638,6 +638,25 @@ class ConexionBD {
             }
         });
     }
+
+    eliminarComentario(id_comentario, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                callback(err);
+            } else {
+                connection.query("DELETE FROM comentarios WHERE id_comentario=?", [id_comentario], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {                        
+                        callback(null, result);
+                    }
+                });
+            }
+        });
+    }
+
 
 }
 
