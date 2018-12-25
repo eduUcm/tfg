@@ -52,7 +52,7 @@ var middlewareSession = expressSession({
     saveUninitialized: false,
     secret: "foobar34",
     resave: false,
-    cookie:{secure: false, expires: new Date(Date.now() + 200000), maxAge:200000},
+    cookie:{secure: false, expires: new Date(Date.now() + 900000), maxAge:900000},
     store: sessionStore
 });
 
@@ -640,11 +640,11 @@ app.get("/listarEdificioM", function(request, response) {
 /*
     Lista la información asociada a un sitio concreto en base a su id.
 */
-app.post("/cargarItems", function(request, response) {
+app.get("/cargarItems", function(request, response) {
     var calls = [];
 
     if(typeof request.session.logueado != 'undefined'){
-        var id_lugar = request.body.id_lugar;
+        var id_lugar = request.query.id_lugar;
 
         nCon.buscarSitio(id_lugar, function(err, result){
             if (result) { 
@@ -739,13 +739,57 @@ app.get("/listarVisitasUsuario", function(request, response) {
 });
 
 /*
-    Lista todas las visitas del usuario seleccionado por el administrador.
+    Elimina el comentario seleccionado, solo si tiene permisos de administrador.
 */
 app.post("/eliminarComentario", function(request, response) {
     if(typeof request.session.logueado != 'undefined' && request.session.userData.rol == "admin"){
         var id_comentario = request.body.id;
 
         nCon.eliminarComentario(id_comentario, function(err, result){
+            if (result) { 
+                response.status(200);
+                response.end();
+            } else {
+                response.status(404);
+                response.end();
+            }
+        });
+    } else{
+        response.status(404);
+    }
+});
+
+/*
+    Elimina el usuario seleccionado, el borrado del usuario es un borrado lógico por lo que seguirá
+    siendo visible para el administrador, y sus visitas y comentarios seguirán activos, pero dicho
+    usuario no tendrá ya acceso al sistema.
+*/
+app.post("/eliminarUsuario", function(request, response) {
+    if(typeof request.session.logueado != 'undefined' && request.session.userData.rol == "admin"){
+        var id_usuario = request.body.id;
+
+        nCon.eliminarUsuario(id_usuario, function(err, result){
+            if (result) { 
+                response.status(200);
+                response.end();
+            } else {
+                response.status(404);
+                response.end();
+            }
+        });
+    } else{
+        response.status(404);
+    }
+});
+
+/*
+    Activa de nuevo a un usuario en el sistema.
+*/
+app.post("/activarUsuario", function(request, response) {
+    if(typeof request.session.logueado != 'undefined' && request.session.userData.rol == "admin"){
+        var id_usuario = request.body.id;
+
+        nCon.activarUsuario(id_usuario, function(err, result){
             if (result) { 
                 response.status(200);
                 response.end();

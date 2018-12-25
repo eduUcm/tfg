@@ -12,7 +12,7 @@ class ConexionBD {
                 //connection.release();
                 callback(err);
             } else {
-                connection.query("SELECT * FROM tfg.usuarios WHERE email=? AND pass=?", [email, password], (err, result) => {
+                connection.query("SELECT * FROM tfg.usuarios WHERE email=? AND pass=? AND activo = 1", [email, password], (err, result) => {
                     connection.release();
                     if (err) {
                         callback(err);
@@ -77,7 +77,7 @@ class ConexionBD {
                 connection.release();
                 callback(err);
             }
-            connection.query("SELECT id_usuario, nick, nombre, apellidos, email, rol FROM usuarios", 
+            connection.query("SELECT id_usuario, nick, nombre, apellidos, email, rol, activo FROM usuarios", 
             [], (err, result) => {
                 if (err) {
                     connection.release();
@@ -657,6 +657,41 @@ class ConexionBD {
         });
     }
 
+    eliminarUsuario(id_usuario, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                callback(err);
+            } else {
+                connection.query("UPDATE usuarios SET activo = 0 WHERE id_usuario = ?", [id_usuario], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {                        
+                        callback(null, result);
+                    }
+                });
+            }
+        });
+    }
+
+    activarUsuario(id_usuario, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                callback(err);
+            } else {
+                connection.query("UPDATE usuarios SET activo = 1 WHERE id_usuario = ?", [id_usuario], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {                        
+                        callback(null, result);
+                    }
+                });
+            }
+        });
+    }
 
 }
 

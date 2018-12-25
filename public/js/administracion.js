@@ -66,11 +66,15 @@ function botonListar(){
 	    	$("#tablaUsuarios thead").html("");
 	    	$("#tablaUsuarios tr").remove(); 
 
-	    	var head = "<tr><th> Nick </th><th> Nombre </th> <th> Apellidos </th><th> Email </th></tr>";
+	    	var head = "<tr><th> Nick </th><th> Nombre </th> <th> Apellidos </th><th> Email </th><th> Activo </th></tr>";
 	        $('#tablaUsuarios thead').append(head); 
 	    	
 	        data.forEach(function (n) {
-	            var nuevaTupla = $("<tr id="+ n.id_usuario +"><td>" + n.nick + "</td><td>" + n.nombre + "</td><td>" + n.apellidos + "</td><td>" + n.email + "</td>");
+	        	if(n.activo == 1){
+	            	var nuevaTupla = $("<tr id="+ n.id_usuario +"><td>" + n.nick + "</td><td>" + n.nombre + "</td><td>" + n.apellidos + "</td><td>" + n.email + "</td><td>SI</td></tr>");
+	           	} else{
+	           		var nuevaTupla = $("<tr class='table-warning' id="+ n.id_usuario +"><td>" + n.nick + "</td><td>" + n.nombre + "</td><td>" + n.apellidos + "</td><td>" + n.email + "</td><td>NO</td></tr>");
+	           	}
 	            $('#tablaUsuarios tbody').append(nuevaTupla); 
 				$(nuevaTupla).on("click", verInfoUsuario);
 	        });        	
@@ -93,6 +97,7 @@ function verInfoUsuario(){
 	var nombre = this.cells[1].textContent;
 	var apellidos = this.cells[2].textContent;
 	var email = this.cells[3].textContent;
+	var activo = this.cells[4].textContent;
 
 	//Creamos header
 	var modalHead = '<h5 class="modal-title tsp1">Usuario: '+nick+'</h5>';
@@ -131,15 +136,28 @@ function verInfoUsuario(){
 	    }
 	});
 
+   	console.log(activo);
    	//Creamos footer
-   	var modalFooter = 	'<div class="row col-12">'+
-   							'<div class="col-3">'+
-								'<button id='+this.id+' onclick="botonEliminarUsuario(this.id)"" type="button" class="btn btn-secondary sp1">Eliminar Usuario</button>'+
-							'</div>'+
-							'<div class="col-9 justify-content-end d-flex">'+
-								'<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>'+
-							'</div>'+
-						'</div>';
+   	if( activo == "SI"){
+	   	var modalFooter = 	'<div class="row col-12">'+
+	   							'<div class="col-3">'+
+									'<button id='+this.id+' onclick="botonEliminarUsuario(this.id)"" type="button" class="btn btn-secondary sp1">Eliminar Usuario</button>'+
+								'</div>'+
+								'<div class="col-9 justify-content-end d-flex">'+
+									'<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>'+
+								'</div>'+
+							'</div>';
+	} else if ( activo == 'NO') {
+	   	var modalFooter = 	'<div class="row col-12">'+
+							'<div class="col-3">'+
+							'<button id='+this.id+' onclick="botonActivarUsuario(this.id)"" type="button" class="btn btn-secondary sp1">Reactivar Usuario</button>'+
+						'</div>'+
+						'<div class="col-9 justify-content-end d-flex">'+
+							'<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>'+
+						'</div>'+
+					'</div>';
+	}
+
 	$('.modal-footer').append(modalFooter); 
 
 	mostrarModal();	
@@ -151,10 +169,10 @@ function eliminarVisita(id){
 }
 
 function botonEliminarUsuario(id){
-	bootbox.confirm("¿Estás seguro?, esta acción no se puede deshacer", function(result){ 
+	bootbox.confirm("¿Estás seguro?", function(result){ 
 		if(result == true){
 		    $.ajax({
-		        type: "GET",
+		        type: "POST",
 		        url:  "/eliminarUsuario",
 		        data: { id : id },
 
@@ -162,7 +180,27 @@ function botonEliminarUsuario(id){
 		        	location.reload();
 		        },
 		        error: function(data, textStatus, jqXHR) {
-		        	alert("Ha ocurrido un error inesperado al intentar al usuario.");
+		        	alert("Ha ocurrido un error inesperado al intentar eliminar al usuario.");
+		        }
+
+		    }); 
+		}
+	});
+}
+
+function botonActivarUsuario(id){
+	bootbox.confirm("¿Estás seguro?", function(result){ 
+		if(result == true){
+		    $.ajax({
+		        type: "POST",
+		        url:  "/activarUsuario",
+		        data: { id : id },
+
+		        success: function (data, textStatus, jqXHR) {
+		        	location.reload();
+		        },
+		        error: function(data, textStatus, jqXHR) {
+		        	alert("Ha ocurrido un error inesperado al intentar reactivar al usuario.");
 		        }
 
 		    }); 

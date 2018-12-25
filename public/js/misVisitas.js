@@ -570,31 +570,51 @@ function botonAddItem(obj){
 
 	var id_item = obj.id;
 	$("#nuevaVisita").show();
+    $('.alert').remove();
 
-    lugares.push(id_item);
-
-    cargarItems(id_item);
+    if(!lugares.includes(obj.id)){
+        if(lugares.length < 10){
+            lugares.push(id_item);
+            cargarItems(id_item);
+        } else{
+            $('#accordion2').after('<p class="alert alert-danger">No se pueden añadir más de 10 sitios.</p>');
+        }
+    } else{
+        $('#accordion2').after('<p class="alert alert-danger">Ya has añadido ese elemento.</p>');
+    }
 }
 
 function cargarItems(id_lugar){
-	$.ajax({
-        type: "POST",
-        url:  "/cargarItems",
-        data: { id_lugar : id_lugar },
 
-        success: function (data, textStatus, jqXHR) {    	
-        	var sitio = $("<div id="+ data[0].id_monumento +" class='card card-museos listaMuseos'>"+
-        					"<div class='card-header'>"+
-        					"<h5>"+ data[0].nombre +"<h5>" +
-        					"<button id=quitar"+ data[0].id_monumento +" onclick='deleteItem(this);' type='button' class='btn btn-success float-right'>- Quitar</button>"+
-        					"</div></div>"
- 						 );
-        	$('#accordion2').append(sitio);
-        },
-        error: function(data, textStatus, jqXHR) {
-        }
+    $('#accordion2').html("");
 
+    lugares.forEach(function(k){
+    	$.ajax({
+            type: "GET",
+            url:  "/cargarItems",
+            data: { id_lugar : k },
+
+            success: function (data, textStatus, jqXHR) {    	
+            	var sitio = $("<div id="+ data[0].id_monumento +" class='card card-museos listaMuseos'>"+
+            					"<div class='card-header'>"+
+            					   "<h5>"+ data[0].nombre +"<h5>" +
+            					"<button id="+ data[0].id_monumento +" onclick='deleteItem(this);' type='button' class='btn btn-success float-right'>- Quitar</button>"+
+            					"</div></div>"
+     						 );
+            	$('#accordion2').append(sitio);
+            },
+            error: function(data, textStatus, jqXHR) {
+                $('#tituloVisita').after('<p class="alert alert-danger">Error al intentar cargar uno o más elementos.</p>');
+            }
+
+        });
     });
+}
+
+function deleteItem(obj) {
+    $(obj).parent().parent().parent().remove();
+
+    lugares = lugares.filter(e => e !== obj.id);
 }
 
 function validarVisita(){
@@ -668,7 +688,3 @@ function crearVisita(){
 
     });
 }
-
-  
-    
-  
