@@ -13,9 +13,10 @@
     var path = require('path');
     var cookieParser = require('cookie-parser');
     var logger = require('morgan');
-    var fs = require("fs");
     var async = require('async');
     var wdk = require('wikidata-sdk');
+    const passport = require("passport");
+    const passportHTTP = require("passport-http");
 
     // Modulos propios:
         //archivo de configuración
@@ -362,7 +363,7 @@ app.post("/votarVisita", function(request, response) {
     Manejadores de ruta del módulo mis visitas
 */
 
-app.get("/misVisitas", function(request, response) {
+app.get("/misVisitas",passport.authenticate('basic', {session: false}), function(request, response) {
     if(typeof request.session.logueado != 'undefined' && request.session.userData.rol == "user"){
         response.status(200);
         response.render("misVisitas");
@@ -509,8 +510,6 @@ app.get("/eliminarVisitaRecomendada", function(request, response){
             id_usuario : request.session.userData.id_usuario
         };
 
-        console.log(datos);
-
         nCon.eliminarVisitaRecomendada(datos, function(err, result){
             if (result) { 
                 response.status(200);
@@ -592,6 +591,7 @@ app.get("/listarMuseos", function(request, response) {
         });
     } else{
         response.status(404);
+        response.end();
     }
 });
 
@@ -613,6 +613,7 @@ app.get("/listarTemplos", function(request, response) {
         });
     } else{
         response.status(404);
+        response.end();
     }
 });
 
@@ -634,6 +635,7 @@ app.get("/listarEdificioM", function(request, response) {
         });
     } else{
         response.status(404);
+        response.end();
     }
 });
 
@@ -648,12 +650,43 @@ app.get("/cargarItems", function(request, response) {
 
         nCon.buscarSitio(id_lugar, function(err, result){
             if (result) { 
+                response.status(202);
                 response.json(result);
+                response.end();
             }
         });
+    } else{
+        response.status(404);
+        response.end();
+    }
+});
+
+/*
+    Elimina el monumento especificado de la visita concreta
+*/
+app.post("/eliminarSitioVisita", function(request, response) {
+    if(typeof request.session.logueado != 'undefined'){
+        var id_visita = request.body.id_visita;
+        var id_monumento = request.body.id_monumento;
+
+        nCon.comprobarEliminarSitioVisita(id_visita, function(err, result){
+            if(result[0].TOTAL > 1){
+                nCon.eliminarSitioVisita(id_visita, id_monumento, function(err, result){
+                    if (result) { 
+                        response.status(202);
+                        response.end();
+                    }
+                });
+            } else{  
+                response.status(400);
+                response.end();
+            }
+
+        });       
 
     } else{
         response.status(404);
+        response.end();
     }
 });
 
@@ -666,9 +699,11 @@ app.get("/administracion", function(request, response) {
     if(typeof request.session.logueado != 'undefined' && request.session.userData.rol == "admin"){
         response.status(200);
         response.render("administracion");
+        response.end();
     } else{
         response.status(200);
         response.render("error_1");
+        response.end();
     }
 });
 
@@ -692,6 +727,7 @@ app.post("/buscarUsuario", function(request, response) {
     } else{
         response.status(200);
         response.render("error_1");
+        response.end();
     }
 });
 
@@ -713,6 +749,7 @@ app.get("/listarUsuarios", function(request, response) {
     } else{
         response.status(200);
         response.render("error_1");
+        response.end();
     }
 });
 
@@ -735,6 +772,7 @@ app.get("/listarVisitasUsuario", function(request, response) {
         });
     } else{
         response.status(404);
+        response.end();
     }
 });
 

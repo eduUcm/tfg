@@ -5,28 +5,28 @@ var lugares = [];
 
 $(document).ready(function() {
 	lugares = [];
+    $( window ).on( "load", function() {
+        cargarMisVisitas();
+        cargarRecomendaciones();
+        restringirFechas();
 
-	cargarMisVisitas();
-	cargarRecomendaciones();
-	restringirFechas();
+        document.getElementById("botonCrear").disabled = false; 
 
-	document.getElementById("botonCrear").disabled = false; 
-
-    $("#anadirLugar").on("click", mostrarMenuLugares);
-    $("#listarMuseos").on("click", botonListarMuseos);
-    $("#ocultarMuseos").on("click", botonOcultarMuseos);
-    $("#listarTemplos").on("click", botonListarTemplos);
-    $("#ocultarTemplos").on("click", botonOcultarTemplos);
-    $("#listarEdificioM").on("click", botonListarEdificioM);
-    $("#ocultarEdificioM").on("click", botonOcultarEdificioM);
-    $("#botonCrear").on("click", validarVisita);
+        $("#anadirLugar").on("click", mostrarMenuLugares);
+        $("#listarMuseos").on("click", botonListarMuseos);
+        $("#ocultarMuseos").on("click", botonOcultarMuseos);
+        $("#listarTemplos").on("click", botonListarTemplos);
+        $("#ocultarTemplos").on("click", botonOcultarTemplos);
+        $("#listarEdificioM").on("click", botonListarEdificioM);
+        $("#ocultarEdificioM").on("click", botonOcultarEdificioM);
+        $("#botonCrear").on("click", validarVisita);
 
 
-    $('.nuevoLugarCancelar').click(function(){
-		$("#nuevaVisita").show();
-	});
-	$(".botonOcultar").hide();
-
+        $('.nuevoLugarCancelar').click(function(){
+            $("#nuevaVisita").show();
+        });
+        $(".botonOcultar").hide();
+    });
 });
 
 function restringirFechas(){
@@ -66,13 +66,13 @@ function cargarMisVisitas(){
                                     "<div class='col-md-3 justify-content-end d-flex'>"+
                                         "<button id="+n.id_visita+" type='button' class='btn' data-toggle='modal' data-target='#modalVisi"+n.id_visita+"'"+
                                         	"onclick='botonOjo(this.id)'>"+
-                                        	"<img src='/images/eye.png' width='25' height='25'></img></button>"+
+                                        	"<img class='fa' src='/images/eye.png' width='25' height='25'></img></button>"+
                                         "<button id="+n.id_visita+" type='button' data-toggle='tooltip' data-placement='top' title='Eliminar' class='btn' style='margin-left:2px;'"+
                                         	"onclick='eliminar(this)'>"+
-                                        	"<img src='/images/trash.png' width='25' height='25'></img></button>"+
+                                        	"<img class='fa' src='/images/trash.png' width='25' height='25'></img></button>"+
                                         "<button id="+n.id_visita+" type='button' data-toggle='tooltip' data-placement='top' title='Recomendar' class='btn' style='margin-left:2px;'"+
                                         	"onclick='recomendar(this)'>"+
-                                        	"<img src='/images/share.png' width='25' height='25'></img></button>"+
+                                        	"<img class='fa' src='/images/share.png' width='25' height='25'></img></button>"+
                                     "</div>" +
                                 "</div>"+    
                             "</li>";
@@ -90,6 +90,9 @@ function cargarMisVisitas(){
                                                 "<div class='modal-body'>"+
                                                 	"<div class='col-md-12'>"+
                                                 		"<h5 class='tituloVisita'>Descripción:</h5>"+
+                                                            "<button id="+n.id_visita+" type='button' class='btn sp6'"+
+                                                                "onclick='botonModificarDescripcion("+n.id_visita+")'>"+
+                                                                "<img src='/images/modify.ico' width='15' height='15' style='vertical-align: iddle'></img></button>"+
                                                 		"<p>"+n.descripcion+"</p>"+
                                                 	"</div>"+
                                                     "<div id='contenidoVisita"+n.id_visita+"'></div>"+
@@ -99,7 +102,8 @@ function cargarMisVisitas(){
                                                     "</div>"+
                                                 "</div>"+
                                                 "<div class='modal-footer'>"+
-                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>"+
+                                                    "<button type='button' class='btn sp1' onclick='modificarAddLugar("+n.id_visita+")' data-dismiss='modal'>+Añadir un nuevo lugar</button>"+
+                                                    "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cerrar</button>"+
                                                 "</div>"+
                                             "</div>"+
                                         "</div>"+
@@ -149,7 +153,6 @@ function cargarMisVisitas(){
     });
 }
 
-
 function cargarRecomendaciones(){
     $.ajax({
         type: "GET",
@@ -174,11 +177,11 @@ function cargarRecomendaciones(){
                                     "</div>"+
                                     "<div class='col-md-3 justify-content-end d-flex'>"+
                                         "<button id="+n.id_visita+" type='button' class='btn' data-toggle='modal' data-target='#modalVisi"+n.id_visita+"'"+
-                                            "onclick='botonOjo(this.id)'>"+
-                                            "<img src='/images/eye.png' width='25' height='25'></img></button>"+
+                                            "onclick='botonOjoRecomend(this.id)'>"+
+                                            "<img class='fa' src='/images/eye.png' width='25' height='25'></img></button>"+
                                         "<button id="+n.id_visita+" type='button' data-toggle='tooltip' data-placement='top' title='Eliminar' class='btn' style='margin-left:2px;'"+
                                             "onclick='eliminarRecomendada(this)'>"+
-                                            "<img src='/images/trash.png' width='25' height='25'></img></button>"+
+                                            "<img class='fa' src='/images/trash.png' width='25' height='25'></img></button>"+
                                     "</div>" +
                                 "</div>"+    
                             "</li>";
@@ -255,7 +258,6 @@ function cargarRecomendaciones(){
 
     });
 }
-
 
 function recomendar(obj){
 	$('#exampleModal3').modal('toggle');
@@ -369,8 +371,10 @@ function botonOjo(id){
                                         "<button id='"+n.id_monumento+"' type='button' data-toggle='tooltip' data-placement='top' title='Ver descripción del sitio' class='btn sp1' style='margin-left:6px;' onclick='verInfoSitio(this)'>"+
                                             "<img onload=this.style.display='block' src='/images/eye3.png' width='25' height='25' ></img></button>"+       
                                     "</div>"+
-                                    "<div class='col-md-2'>dsadsa"+
-
+                                    "<div class='col-md-2'>"+
+                                        "<button type='button' data-toggle='tooltip' data-placement='top' title='Eliminar' class='btn' style='margin-left:2px;'"+
+                                            "onclick='eliminarSitioVisita("+id+","+n.id_monumento+")'>"+
+                                            "<img src='/images/trash.png' width='25' height='25'></img></button>"+
                                     "</div>"+
                                 "<div class='infoSitio border rounded bsp1' id='sitio"+n.id_monumento+"' style='margin-top:6px;'>"+
                                     "<div class='contenidoDesc'>"+
@@ -396,6 +400,81 @@ function botonOjo(id){
             alert("fallo");
         }
     });
+}
+
+function botonOjoRecomend(id){
+    $.ajax({
+        type: "POST",
+        url:  "/obtenerInfoVisita",
+        data: { id : id },
+
+        success: function (data, textStatus, jqXHR) {
+
+            var miModal = "modalMonu"+id;
+            var miDiv = "#contenidoVisita"+id;
+
+            $(miDiv).html("");
+
+            data.forEach(function(n){
+
+                var sitio = "<li class='list-group-item'>"+
+                                "<div class='row  justify-content-end col-md-12'>"+
+                                    "<div class='col-md-10'>"+
+                                        "<h6 class='tituloVisita'>"+n.nombre+"</h6>"+
+                                        "<button id='"+n.id_monumento+"' type='button' data-toggle='tooltip' data-placement='top' title='Ver mapa del sitio' class='btn sp1' onclick='generarMapa(this, this.id,"+n.latitud+", "+n.longitud+")'>"+
+                                            "<img onload=this.style.display='block' src='/images/map3.png' width='25' height='25'></img></button>"+
+                                        "<button id='"+n.id_monumento+"' type='button' data-toggle='tooltip' data-placement='top' title='Ver descripción del sitio' class='btn sp1' style='margin-left:6px;' onclick='verInfoSitio(this)'>"+
+                                            "<img onload=this.style.display='block' src='/images/eye3.png' width='25' height='25' ></img></button>"+       
+                                    "</div>"+
+                                    "<div class='col-md-2'>"+
+                                    "</div>"+
+                                "<div class='infoSitio border rounded bsp1' id='sitio"+n.id_monumento+"' style='margin-top:6px;'>"+
+                                    "<div class='contenidoDesc'>"+
+                                        "<p class='font-weight-bold'>Descripcion: </p> <p>"+ n.descripcion +"</p>"+
+                                        "<p class='font-weight-bold'>Horario: </p>"+ n.horario +"</p>"+
+                                        "<p class='font-weight-bold'>Calle: </p>"+ n.calle +"</p>"+
+                                        "<p>Puedes encontrar más información en  <a target='_blank' href='"+n.url+"'> la web del ayuntamiento de Madrid </a>.</p>"+
+                                    "</div>"+
+                                "</div>"+
+                                "</div>"+
+                                "<div class='mapCont' id='mapCont"+n.id_monumento+"' style='width:400px; height:300px; display: none;'>"+
+                                    "<div class='map' id='map"+n.id_monumento+"'></div>"+
+                                "</div>"+
+                            "</li>";
+
+                $(miDiv).append(sitio);
+            });
+
+            $('#miModal').modal();
+            $(".infoSitio").hide();
+        },
+        error: function(data, textStatus, jqXHR) {
+            alert("fallo");
+        }
+    });
+}
+
+function modificarAddLugar(id){
+    alert(id)
+}
+
+function eliminarSitioVisita(id_visita,id_monumento){
+    $.ajax({
+        type: "POST",
+        url:  "/eliminarSitioVisita",
+        data: { id_visita: id_visita, id_monumento : id_monumento},
+
+        success: function (data, textStatus, jqXHR) {       
+            location.reload();
+        },
+        error: function(data, textStatus, jqXHR) {
+            alert("No se puede eliminar el último lugar de una visita");
+        }
+    });
+}
+
+function botonModificarDescripcion(id_visita){
+    alert(id_visita);
 }
 
 function verInfoSitio(obj){
