@@ -12,6 +12,8 @@ $(document).ready(function() {
 	$("#botonListar").on("click", botonListar);
 	$("#tablaUsuarios").hide();
 	$("#tablaUsuarios tbody").html("");
+
+	mostrarEstadisticas();
 });
 
 
@@ -216,4 +218,39 @@ function verInfoSitio(obj){
 
 function mostrarModal(){
 	$('#modalInfoUsuario').modal();
+}
+
+function mostrarEstadisticas(){
+	var usuariosTotales, visitasTotales, sistiosTotales;
+	var sitioMasPopular, visitaMasPopular;
+	var visitasTotalesPopular = "(";
+
+	$.ajax({
+	        type: "GET",
+	        url:  "/obtenerDatosEstadisticas",
+
+	        success: function (data, textStatus, jqXHR) {  
+	        	usuariosTotales = data[0];
+	        	visitasTotales = data[1];
+	        	sistiosTotales = data[2];
+	        	sitioMasPopular = data[3];
+	        	visitaMasPopular = data[4].titulo;
+	        	visitasTotalesPopular += data[4].total;
+	        	visitasTotalesPopular += " visitas)";
+
+
+	        	$('#usuariosRegistrados').append(usuariosTotales); 
+				$('#visitasCreadas').append(visitasTotales);
+				$('#sitiosDisponibles').append(sistiosTotales);
+				$('#sitioPopular').append(sitioMasPopular);
+				$('#visitaPopular').append(visitaMasPopular);
+				$('#estVisitas').append(visitasTotalesPopular);
+				
+	        },
+	        error: function(data, textStatus, jqXHR) {
+
+	        }
+
+	});
+
 }

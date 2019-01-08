@@ -20,7 +20,6 @@ class ConexionBD {
                         if(result.length === 0) {
                             callback(null);
                         } else {
-                            console.log(result);
                             callback(null, result);
                         } 
                     }
@@ -96,7 +95,7 @@ class ConexionBD {
                 connection.release();
                 callback(err);
             }
-            connection.query("SELECT * FROM visitas2 WHERE titulo like ? OR descripcion like ? GROUP BY id_visita LIMIT 5", 
+            connection.query("SELECT * FROM visitas WHERE titulo like ? OR descripcion like ? GROUP BY id_visita LIMIT 5", 
             ['%' + cadena + '%', '%' + cadena + '%'], (err, result) => {
                 if (err) {
                     connection.release();
@@ -118,7 +117,7 @@ class ConexionBD {
                 connection.release();
                 callback(err);
             } else {
-                connection.query("SELECT * FROM tfg.visitas2 WHERE titulo=?", [titulo], (err, result) => {
+                connection.query("SELECT * FROM tfg.visitas WHERE titulo=?", [titulo], (err, result) => {
                     if (err) {
                         connection.release();
                         callback(err);
@@ -162,7 +161,7 @@ class ConexionBD {
                 //connection.release();
                 callback(err);
             } else {
-                connection.query("INSERT INTO visitas2(id_visita, id_autor, id_monumento, titulo, recomendada, dia_visita, fechaCreacion, num_visitas, num_descargas, tag1, tag2, tag3, descripcion) VALUES (?,?,?,?,?,?,?,0,0,?,?,?,?)",
+                connection.query("INSERT INTO visitas(id_visita, id_autor, id_monumento, titulo, recomendada, dia_visita, fechaCreacion, num_visitas, num_descargas, tag1, tag2, tag3, descripcion) VALUES (?,?,?,?,?,?,?,0,0,?,?,?,?)",
                 [data.id_visita, data.id_autor, museo, data.titulo, data.recomendada, data.diaVisita, data.fechaCreacion, data.tag1, data.tag2, data.tag3, data.breveDesc], (err, result) => {
                     connection.release();
                     if (err) {
@@ -208,7 +207,7 @@ class ConexionBD {
                 //connection.release();
                 callback(err);
             } else {
-                connection.query("SELECT MAX(id_visita)+1 AS idvalido FROM visitas2", (err, result) => {
+                connection.query("SELECT MAX(id_visita)+1 AS idvalido FROM visitas", (err, result) => {
                     connection.release();
                     if (err) {
                         callback(err);
@@ -230,7 +229,7 @@ class ConexionBD {
                 connection.release();
                 callback(err);
             } else {
-                connection.query("SELECT * FROM visitas2 WHERE id_autor=? GROUP BY id_visita ORDER BY fechaCreacion DESC",
+                connection.query("SELECT * FROM visitas WHERE id_autor=? GROUP BY id_visita ORDER BY fechaCreacion DESC",
                 [id_autor], (err, result) => {
                     connection.release();
                     if (err) {
@@ -253,7 +252,7 @@ class ConexionBD {
                 connection.release();
                 callback(err);
             } else {
-                connection.query("SELECT * FROM visitas2 WHERE id_visita IN (SELECT id_visita FROM visitas_recomendadas WHERE id_usuarioDestino=?) GROUP BY id_visita",
+                connection.query("SELECT * FROM visitas WHERE id_visita IN (SELECT id_visita FROM visitas_recomendadas WHERE id_usuarioDestino=?) GROUP BY id_visita",
                 [id_usuario], (err, result) => {
                     connection.release();
                     if (err) {
@@ -276,7 +275,7 @@ class ConexionBD {
                 connection.release();
                 callback(err);
             } else {
-                connection.query("SELECT * FROM visitas2 GROUP BY id_visita ORDER BY puntuacion DESC LIMIT 10", (err, result) => {
+                connection.query("SELECT * FROM visitas GROUP BY id_visita ORDER BY puntuacion DESC LIMIT 10", (err, result) => {
                     connection.release();
                     if (err) {
                         callback(err);
@@ -295,11 +294,58 @@ class ConexionBD {
     eliminarVisita(id_visita, callback) {
         this.pool.getConnection((err, connection) => {
             if (err) {
-                //connection.release();
+                connection.release();
                 callback(err);
             } else {
-                connection.query("DELETE FROM visitas2 WHERE id_visita=?",
+                connection.query("DELETE FROM visitas WHERE id_visita=?",
                 [id_visita], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {
+                        if(result.length === 0) {
+                            callback(null);
+                        } else {
+                            callback(null, result);
+                        } 
+                    }
+                });
+            }
+        });
+    }
+
+
+    comprobarEliminarSitioVisita(id_visita, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                callback(err);
+            } else {
+                connection.query("SELECT COUNT(*) AS TOTAL FROM visitas WHERE id_visita=?",
+                [id_visita], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {
+                        if(result.length === 0) {
+                            callback(null);
+                        } else {
+                            callback(null, result);
+                        } 
+                    }
+                });
+            }
+        });
+    }
+
+    eliminarSitioVisita(id_visita, id_monumento, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                callback(err);
+            } else {
+                connection.query("DELETE FROM visitas WHERE id_visita=? AND id_monumento=?",
+                [id_visita, id_monumento], (err, result) => {
                     connection.release();
                     if (err) {
                         callback(err);
@@ -461,7 +507,7 @@ class ConexionBD {
                 //connection.release();
                 callback(err);
             } else {
-                connection.query("SELECT puntuacion, votos FROM visitas2 WHERE id_visita=? LIMIT 1",
+                connection.query("SELECT puntuacion, votos FROM visitas WHERE id_visita=? LIMIT 1",
                 [id_visita], (err, result) => {
                     connection.release();
                     if (err) {
@@ -507,7 +553,7 @@ class ConexionBD {
                 //connection.release();
                 callback(err);
             } else {
-                connection.query("UPDATE visitas2 SET puntuacion=?, votos=? WHERE id_visita=?",
+                connection.query("UPDATE visitas SET puntuacion=?, votos=? WHERE id_visita=?",
                 [datosVoto.media, datosVoto.votos, datosVoto.id_visita], (err, result) => {
                     connection.release();
                     if (err) {
@@ -553,7 +599,7 @@ class ConexionBD {
                 //connection.release();
                 callback(err);
             } else {
-                connection.query("SELECT * FROM monumentos WHERE id_monumento IN (SELECT id_monumento FROM `visitas2` WHERE id_visita=?)",
+                connection.query("SELECT * FROM monumentos WHERE id_monumento IN (SELECT id_monumento FROM `visitas` WHERE id_visita=?)",
                 [id], (err, result) => {
                     connection.release();
                     if (err) {
@@ -682,6 +728,114 @@ class ConexionBD {
                 callback(err);
             } else {
                 connection.query("UPDATE usuarios SET activo = 1 WHERE id_usuario = ?", [id_usuario], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {                        
+                        callback(null, result);
+                    }
+                });
+            }
+        });
+    }
+
+    obtenerTotalUsuarios(callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                callback(err);
+            } else {
+                connection.query("SELECT COUNT(*) AS total FROM usuarios",[], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {                        
+                        callback(null, result);
+                    }
+                });
+            }
+        });
+    }
+
+    obtenerTotalVisitas(callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                callback(err);
+            } else {
+                connection.query("SELECT COUNT(*) AS total FROM visitas",[], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {                        
+                        callback(null, result);
+                    }
+                });
+            }
+        });
+    }
+
+    obtenerTotalSitios(callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                callback(err);
+            } else {
+                connection.query("SELECT COUNT(*) AS total FROM monumentos",[], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {                        
+                        callback(null, result);
+                    }
+                });
+            }
+        });
+    }
+
+    obtenerSitioPopular(callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                callback(err);
+            } else {
+                connection.query("SELECT m.nombre, count(v.id_monumento) FROM visitas v, monumentos m WHERE v.id_monumento = m.id_monumento group BY v.id_monumento order by 2 desc limit 1",[], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {                        
+                        callback(null, result);
+                    }
+                });
+            }
+        });
+    }
+
+    obtenerVisitaMasPopular(callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                callback(err);
+            } else {
+                connection.query("SELECT titulo, max(num_visitas) as total FROM visitas group BY id_visita order by 2 desc limit 1",[], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {                        
+                        callback(null, result);
+                    }
+                });
+            }
+        });
+    }
+
+    aumentarNumVisitas(id_visita, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                callback(err);
+            } else {
+                connection.query("UPDATE visitas SET num_visitas = num_visitas + 1 WHERE id_visita = ?;",[id_visita], (err, result) => {
                     connection.release();
                     if (err) {
                         callback(err);

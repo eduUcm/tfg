@@ -171,9 +171,14 @@ function cargarVisitas(){
                 //Li con cada monumento
                 var visita = "<li id='visita"+ n.id_visita +"' class='list-group-item'>" +
                                 "<div class='row'>"+
-                                    "<div class='col-md-10'>"+
-                                        "<h5 class='tituloVisita'>"+ n.titulo +"</h5>"+
-                                        "<p class='card-text'><small class='text-muted'>valoración: "+n.puntuacion+" ("+n.votos+" votos)</small></p>"+
+                                    "<div class='row col-md-10'>"+
+                                        "<div class='col-md-7'>"+
+                                            "<h5 class='tituloVisita'>"+ n.titulo +"</h5>"+
+                                            "<p class='card-text'><small class='text-muted'>valoración: "+n.puntuacion+" ("+n.votos+" votos)</small></p>"+
+                                        "</div>"+
+                                        "<div class='col-md-3'>"+
+                                            "<p class='card-text'><small class='text-muted'>visitas: "+n.num_visitas+"</small></p>"+
+                                        "</div>"+
                                     "</div>"+
                                     "<div class='col-md-2 justify-content-end d-flex'>"+
                                         "<button id="+n.id_visita+" type='button' class='btn' data-toggle='modal' data-target='#modalVisi"+n.id_visita+"'"+
@@ -463,7 +468,7 @@ function botonValoracion(id){
             data: { id : id , voto : voto},
 
             success: function (data, textStatus, jqXHR) {
-                $("#mensajesComentario").prepend("<p class='text-success mensj'>Voto contabilizado correctamente!</p>"); 
+                location.reload();
             },
             error: function(data, textStatus, jqXHR) {
                 $("#mensajesComentario").prepend("<p class='text-danger mensj'>No puedes votar otra vez!</p>");
