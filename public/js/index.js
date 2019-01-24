@@ -336,7 +336,7 @@ function botonOjo(id){
                                         "<button id='"+n.id_monumento+"' type='button' class='btn sp1' data-toggle='tooltip' data-placement='top' title='Ver informacion' style='margin-left:6px;' onclick='verInfoSitio(this)'>"+
                                         "<img onload=this.style.display='block' src='/images/eye3.png' width='25' height='25' ></img></button>"+
                                     "</div>"+
-                                    "<div class='col-md-2'>dsadsa"+
+                                    "<div class='col-md-2'>"+
 
                                     "</div>"+
                                 "</div>"+

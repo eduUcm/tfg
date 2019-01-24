@@ -23,7 +23,6 @@
         var config = require("./config");
         //Modulos de conexiones con la BBDD
         var conexion = require("./conexionBD");
-        var conexionAPI = require("./conexionAPI");
 
 /*
     VARIABLES
@@ -365,7 +364,7 @@ app.post("/votarVisita", function(request, response) {
     Manejadores de ruta del módulo mis visitas
 */
 
-app.get("/misVisitas",passport.authenticate('basic', {session: false}), function(request, response) {
+app.get("/misVisitas", function(request, response) {
     if(typeof request.session.logueado != 'undefined' && request.session.userData.rol == "user"){
         response.status(200);
         response.render("misVisitas");
@@ -691,6 +690,39 @@ app.post("/eliminarSitioVisita", function(request, response) {
         response.end();
     }
 });
+
+/*
+    Añade el sitio especificado a la visita, si es posible
+*/
+app.post("/nuevoSitioVisita", function(request, response) {
+    if(typeof request.session.logueado != 'undefined'){
+        var datosNuevoSitio = {
+            id_visita : request.body.id_visita,
+            id_monumento : request.body.id_monumento,
+            id_autor : request.session.userData.id_usuario
+        };
+
+
+        nCon.otenerDatosSitioVisita(datosNuevoSitio.id_visita, function(err, result){
+            nCon.añadirSitioVisita(datosNuevoSitio, result, function(err, result){
+                if (result) { 
+                    response.status(202);
+                    response.end();
+                } else{
+                    console.log(err);
+                    response.status(400);
+                    response.end();
+                }
+            });
+            
+        });         
+
+    } else{
+        response.status(404);
+        response.end();
+    }
+});
+
 
 /*
     **************************** ADMINISTRACIÓN ****************************
@@ -1046,7 +1078,11 @@ request('https://datos.madrid.es/egob/catalogo/201132-0-museos.json', { json: tr
 
         nCon.comprobarSitio(museo.nombre, museo.tipo, function(err, result){
             if(result){
-                //console.log("entrada duplicada");
+                nCon.actualizaSitio(result[0].id_monumento, museo, function(err, result){
+                    if(err){
+                        console.log(err);
+                    }
+                });
             } else{
                 nCon.insertarSitio(museo, function(err, result){
                     if(err){
@@ -1090,7 +1126,11 @@ request('https://datos.madrid.es/egob/catalogo/209426-0-templos-catolicas.json',
 
         nCon.comprobarSitio(temploC.nombre, temploC.tipo, function(err, result){
             if(result){
-                //console.log("entrada duplicada");
+                nCon.actualizaSitio(result[0].id_monumento, temploC, function(err, result){
+                    if(err){
+                        console.log(err);
+                    }
+                });
             } else{
                 nCon.insertarSitio(temploC, function(err, result){
                     if(err){
@@ -1133,7 +1173,11 @@ request('https://datos.madrid.es/egob/catalogo/208844-0-monumentos-edificios.jso
 
         nCon.comprobarSitio(edificioM.nombre, edificioM.tipo, function(err, result){
             if(result){
-                //console.log("entrada duplicada");
+                nCon.actualizaSitio(result[0].id_monumento, edificioM, function(err, result){
+                    if(err){
+                        console.log(err);
+                    }
+                });
             } else{
                 nCon.insertarSitio(edificioM, function(err, result){
                     if(err){

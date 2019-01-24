@@ -361,6 +361,53 @@ class ConexionBD {
         });
     }
 
+    otenerDatosSitioVisita(id_visita, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                callback(err);
+            } else {
+                connection.query("SELECT * FROM visitas WHERE id_visita=? LIMIT 1",
+                [id_visita], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {
+                        if(result.length === 0) {
+                            callback(null);
+                        } else {
+                            callback(null, result);
+                        } 
+                    }
+                });
+            }
+        });
+    }
+
+    añadirSitioVisita(datosNuevoSitio, rsl, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                callback(err);
+            } else {
+                connection.query("INSERT INTO visitas(id_visita, id_autor, id_monumento, titulo, dia_visita, fechaCreacion, num_visitas, num_descargas, num_comentarios, puntuacion, votos, tag1, tag2, tag3, descripcion)"+
+                                 "            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                [datosNuevoSitio.id_visita, datosNuevoSitio.id_autor, datosNuevoSitio.id_monumento, rsl[0].titulo, rsl[0].dia_visita, rsl[0].fechaCreacion, rsl[0].num_visitas, rsl[0].num_descargas, rsl[0].num_comentarios, rsl[0].puntuacion, rsl[0].votos, rsl[0].tag1, rsl[0].tag2, rsl[0].tag3, rsl[0].descripcion], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {
+                        if(result.length === 0) {
+                            callback(null);
+                        } else {
+                            callback(null, result);
+                        } 
+                    }
+                });
+            }
+        });
+    }
+
     eliminarVisitaRecomendada(datos, callback) {
         this.pool.getConnection((err, connection) => {
             if (err) {
@@ -431,6 +478,30 @@ class ConexionBD {
             }
         });
     }
+
+    actualizaSitio(id_monumento, sitio, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                //connection.release();
+                callback(err);
+            } else {
+                connection.query("UPDATE monumentos SET tipo=?, nombre=?, url=?, codigoPostal=?, calle=?, latitud=?, longitud=?, descripcion=?, horario=? WHERE id_monumento=?",
+                [sitio.tipo ,sitio.nombre, sitio.url, sitio.postal, sitio.calle, sitio.lat, sitio.long, sitio.descripcion, sitio.horario, id_monumento], (err, result) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {
+                        if(result.length === 0) {
+                            callback(null);
+                        } else {
+                            callback(null, result);
+                        } 
+                    }
+                });
+            }
+        });
+    }
+
 
     obtenerInfoMonumentoId(id, callback) {
         this.pool.getConnection((err, connection) => {

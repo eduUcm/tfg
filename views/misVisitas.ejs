@@ -27,7 +27,7 @@
         </div>
 
             <!-- MODAL PARA NUEVA VISITA -->
-            <div class="modal fade" id="nuevaVisita" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+            <div id="nuevaVisita" class="modal fade" role="dialog" tabindex="-1"  aria-labelledby="myModalLabel" aria-hidden="false">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <!-- CABECERA NUEVA VISITA -->
@@ -88,7 +88,7 @@
                                     <div id="accordion2">
                                     </div>
                                     <div class="col-sm-offset-2 col-sm-10">
-                                        <button id="anadirLugar" type="button" class="btn btn-primary sp1" data-toggle="modal" data-target="#nuevoLugar" style="margin:5px;"><span class="textPrincipal">Añadir lugar<span></button>
+                                        <button id="anadirLugar" type="button" class="btn btn-primary sp1" data-toggle="modal" data-target="#modalNuevoMonumento" style="margin:5px;"><span class="textPrincipal">Añadir lugar<span></button>
                                     </div>
                                 </div>
                         </div>
@@ -105,87 +105,82 @@
             </div>
             <!-- MODAL PARA NUEVA VISITA -->   
 
+            <!-- MODAL NUEVO MONUMENTO -->
+            <div id="modalNuevoMonumento" class="modal fade bd-example-modal-lg" role="dialog" tabindex="-1"  aria-labelledby="myLargeModalLabel" aria-hidden="false">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="tsp1 modal-title">Añadir un monumento</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Buscar</h5>
+                                    <hr>
+                                    <div id="filtroBusqueda">
+                                        <input class="form-control" id="myInput" type="text" placeholder="búsqueda..">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>                            
+                            <!-- MUSEOS-->
+                            <div class="card mb-3">
+                                <img class="card-img-top" src="/images/museos.png" alt="Card image cap">
+                                <div class="card-body">
+                                    <h5 class="card-title">Museos</h5>
+                                    <p class="card-text">Museos dentro de los límites de la ciudad de Madrid.</p>
+                                    <div id=botoneraCategoriasM">
+                                        <button id="mostrarMuseos" type="button" class="btn btn-primary sp1">Listar</button>
+                                        <button id='ocultarMuseos' type='button' class='btn btn-primary sp1 botonOcultar'>Ocultar</button>
+                                    </div>
+                                </div>
+                                <div id="listadoMuseos">
 
-            <!-- MODAL NUEVO LUGAR-->
-            <div class="modal fade" id="nuevoLugar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content"> 
-                    <!-- CABECERA NUEVO LUGAR-->
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Categorías</h5>
-                        <button type="button" class="close nuevoLugarCancelar" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
+                                </div>
+                            </div>
+                            <!-- MUSEOS-->
+                            <!-- TEMPLOS-->
+                            <div class="card mb-3">
+                                  <img class="card-img-top" src="/images/iglesias.png" alt="Card image cap">
+                                  <div class="card-body">
+                                    <h5 class="card-title">Iglesias</h5>
+                                    <p class="card-text">Iglesias dentro de los límites de la ciudad de Madrid.</p>
+                                    <div id=botoneraCategoriasM">
+                                            <button id="mostrarTemplos" type="button" class="btn btn-primary sp1">Listar</button>
+                                            <button id='ocultarTemplos' type='button' class='btn btn-primary sp1 botonOcultar'>Ocultar</button>
+                                    </div>
+                                    <div id="listadoIglesias">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- TEMPLOS-->
+                            <!-- EDIFICIOS MONUMENTALES-->
+                            <div class="card mb-3">
+                                  <img class="card-img-top" src="/images/edificiosM.png" alt="Card image cap">
+                                  <div class="card-body">
+                                    <h5 class="card-title">Edificios monumentales</h5>
+                                    <p class="card-text">Grandes e icónicos edificios o lugares de la ciudad de madrid.</p>
+                                    <div id=botoneraCategoriasM">
+                                            <button id="mostrarMonumentos" type="button" class="btn btn-primary sp1">Listar</button>
+                                            <button id='ocultarMonumentos' type='button' class='btn btn-primary sp1 botonOcultar'>Ocultar</button>
+                                    </div>
+                                    <div id="listadoMonumentos"></div>
+                                </div>
+                            </div>
+                            <!-- EDIFICIOS MONUMENTALES-->                                                      
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-target="#nuevaVisita" data-dismiss="modal" >Cerrar</button>
+                        </div>
                     </div>
-                    <!-- CABECERA NUEVO LUGAR-->
-
-                    <!-- CUERPO NUEVO LUGAR-->
-                    <div class="modal-body">
-                        <!-- MUSEOS-->
-                        <div class="card mb-3">
-                            <img class="card-img-top" src="/images/museos.png" alt="Card image cap">
-                            <div class="card-body">
-                                <h5 class="card-title">Museos</h5>
-                                <p class="card-text">Museos dentro de los límites de la ciudad de Madrid.</p>
-                                <div id=botoneraCategoriasM">
-                                    <button id="listarMuseos" type="button" class="btn btn-primary sp1">Listar</button>
-                                    <button id='ocultarMuseos' type='button' class='btn btn-primary sp1 botonOcultar'>Ocultar</button>
-                                </div>
-                            </div>
-                            <div id="accordion">
-
-                            </div>
-                        </div>
-                        <!-- MUSEOS-->
-
-                        <!-- TEMPLOS-->
-                        <div class="card mb-3">
-                              <img class="card-img-top" src="/images/iglesias.png" alt="Card image cap">
-                              <div class="card-body">
-                                <h5 class="card-title">Iglesias</h5>
-                                <p class="card-text">Iglesias dentro de los límites de la ciudad de Madrid.</p>
-                                <div id=botoneraCategoriasM">
-                                        <button id="listarTemplos" type="button" class="btn btn-primary sp1">Listar</button>
-                                        <button id='ocultarTemplos' type='button' class='btn btn-primary sp1 botonOcultar'>Ocultar</button>
-                                </div>
-                                <div id="accordion3">
-
-                                </div>
-                            </div>
-                        </div>
-                        <!-- TEMPLOS-->
-
-                        <!-- EDIFICIOS MONUMENTALES-->
-                        <div class="card mb-3">
-                              <img class="card-img-top" src="/images/edificiosM.png" alt="Card image cap">
-                              <div class="card-body">
-                                <h5 class="card-title">Edificios monumentales</h5>
-                                <p class="card-text">Grandes e icónicos edificios o lugares de la ciudad de madrid.</p>
-                                <div id=botoneraCategoriasM">
-                                        <button id="listarEdificioM" type="button" class="btn btn-primary sp1">Listar</button>
-                                        <button id='ocultarEdificioM' type='button' class='btn btn-primary sp1 botonOcultar'>Ocultar</button>
-                                </div>
-                                <div id="accordion4">
-
-                                </div>
-                            </div>
-                        </div>
-                        <!-- EDIFICIOS MONUMENTALES-->  
-
-                    </div>
-                    <!-- CABECERA NUEVO LUGAR-->
-f
-                    <!-- FOOTER NUEVO LUGAR-->
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary nuevoLugarCancelar" data-dismiss="modal">Cancelar</button>
-                  </div>
-                  <!-- FOOTER NUEVO LUGAR-->
                 </div>
-              </div>
             </div>
-            <!-- FIN MODAL NUEVO LUGAR-->
-
-
+            <!-- MODAL NUEVO MONUMENTO -->
+            
             <!-- Modal menu de visita -->
             <div class="modal fade" id="myModal">
                 <div class="modal-dialog">

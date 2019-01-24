@@ -1,36 +1,45 @@
 "use strict";
 
 var lugares = [];
-
+var visita;
 
 $(document).ready(function() {
 	lugares = [];
     $( window ).on( "load", function() {
         cargarMisVisitas();
+        cargarSitios();
         cargarRecomendaciones();
         restringirFechas();
 
         document.getElementById("botonCrear").disabled = false; 
 
-        $("#anadirLugar").on("click", mostrarMenuLugares);
+        $("#botonCrear").on("click", validarVisita);
+        $("#anadirLugar").on("click", mostrarBotonAnadir);
+
+        $("#mostrarTemplos").on("click", mostrarListaTemplos);
+        $("#mostrarMuseos").on("click", mostrarListaMuseos);
+        $("#mostrarMonumentos").on("click", mostrarListaMonumentos);
+
+        $("#ocultarTemplos").on("click", ocultarListaTemplos);
+        $("#ocultarMuseos").on("click", ocultarListaMuseos);
+        $("#ocultarMonumentos").on("click", ocultarListaMonumentos);
+
+        /*
         $("#listarMuseos").on("click", botonListarMuseos);
         $("#ocultarMuseos").on("click", botonOcultarMuseos);
         $("#listarTemplos").on("click", botonListarTemplos);
         $("#ocultarTemplos").on("click", botonOcultarTemplos);
         $("#listarEdificioM").on("click", botonListarEdificioM);
         $("#ocultarEdificioM").on("click", botonOcultarEdificioM);
-        $("#botonCrear").on("click", validarVisita);
-
+        */
 
         $('.nuevoLugarCancelar').click(function(){
             $("#nuevaVisita").show();
         });
-        $(".botonOcultar").hide();
     });
 });
 
 function restringirFechas(){
-
 	var date = new Date();
 	var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
@@ -102,7 +111,7 @@ function cargarMisVisitas(){
                                                     "</div>"+
                                                 "</div>"+
                                                 "<div class='modal-footer'>"+
-                                                    "<button type='button' class='btn sp1' onclick='modificarAddLugar("+n.id_visita+")' data-dismiss='modal'>+Añadir un nuevo lugar</button>"+
+                                                    "<button type='button' class='btn sp1' data-toggle='modal' data-target='#modalNuevoMonumento' onclick='modificarAddLugar("+n.id_visita+")'>+Añadir un nuevo lugar</button>"+
                                                     "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cerrar</button>"+
                                                 "</div>"+
                                             "</div>"+
@@ -454,10 +463,6 @@ function botonOjoRecomend(id){
     });
 }
 
-function modificarAddLugar(id){
-    alert(id)
-}
-
 function eliminarSitioVisita(id_visita,id_monumento){
     $.ajax({
         type: "POST",
@@ -504,163 +509,45 @@ function generarMapa(obj, id, latitud, longitud){
     });
 }
 
-function mostrarMenuLugares(){
-	//Reseteamos contenido del modal
-	//$("#nuevoLugar").html("");
-	$("#nuevaVisita").hide();
-}
+function botonAddItem(id){
 
-function botonListarMuseos(){
-
-	$("#accordion").html("");
-	$("#ocultarMuseos").show();
-
-    $.ajax({
-        type: "GET",
-        url:  "/listarMuseos",
-
-        success: function (data, textStatus, jqXHR) {      	
-            data.forEach(function (n) {
-
-            	var museo2 = $("<div id="+ n.id_monumento +" class='card card-museos'>" +
- 							 "<div class='card-header' id='heading"+n.id_monumento+"'>" +
- 							 "<h5 class='mb-0'>" + 
-	 							 "<button class='btn btn-link collapsed' data-toggle='collapse' data-target='#collapse"+n.id_monumento+"' aria-expanded='false'"+
-	 							 "aria-controls='collapseTwo'>" + n.nombre + "</button>" +
-	 							 "<button id="+n.id_monumento+" type='button' data-dismiss='modal' onclick='botonAddItem(this);' class='btn btn-success float-right'>+ Añadir</button>" +
-	 						 "</h5>" +
-	 						 "</div>" +
-	 						 "<div id='collapse"+n.id_monumento+"' class='collapse' aria-labelledby='heading"+n.id_monumento+"' data-parent='#accordion'>" +
-	 						 "<div class='card-body'>"  +
-	 						 	"<p>Dirección: " + n.calle + "</p>" +
-	 						 	"<p>Mas info en: <a target='_blank' href='"+n.url+"'> OpenDataMadrid </a></p>" +
-	 						 	"<a class='btn btn-primary sp1' data-toggle='collapse' href='#collapseDesc" + n.id_monumento + "' role='button' aria-expanded='false' aria-controls='collapseExample'>ver descripcion</a>" +
-	 						 	"<div class='collapse' id='collapseDesc"+ n.id_monumento +"'>" +
-	 						 		"<div class='card card-body'><em>" + n.descripcion + "</em></div></div>" +
-	 						 "</div></div></div></div>"
-	 						 );
-
-                $('#accordion').append(museo2);
-            });
-
-        },
-        error: function(data, textStatus, jqXHR) {
-        }
-
-    });
-}
-
-function botonOcultarMuseos(){
-	$('.card-museos').remove();
-	$("#ocultarMuseos").hide();
-}
-
-function botonListarTemplos(){
-
-	$("#accordion3").html("");
-	$("#ocultarTemplos").show();
-
-    $.ajax({
-        type: "GET",
-        url:  "/listarTemplos",
-
-        success: function (data, textStatus, jqXHR) {      	
-            data.forEach(function (n) {
-
-            	var templo = $("<div id="+ n.id_monumento +" class='card card-templos'>" +
- 							 "<div class='card-header' id='heading"+n.id_monumento+"'>" +
- 							 "<h5 class='mb-0'>" + 
-	 							 "<button class='btn btn-link collapsed' data-toggle='collapse' data-target='#collapse"+n.id_monumento+"' aria-expanded='false'"+
-	 							 "aria-controls='collapseTwo'>" + n.nombre + "</button>" +
-	 							 "<button id="+n.id_monumento+" type='button' data-dismiss='modal' onclick='botonAddItem(this);' class='btn btn-success float-right'>+ Añadir</button>" +
-	 						 "</h5>" +
-	 						 "</div>" +
-	 						 "<div id='collapse"+n.id_monumento+"' class='collapse' aria-labelledby='heading"+n.id_monumento+"' data-parent='#accordion'>" +
-	 						 "<div class='card-body'>"  +
-	 						 	"<p>Dirección: " + n.calle + "</p>" +
-	 						 	"<p>Mas info en: <a target='_blank' href='"+n.url+"'> OpenDataMadrid </a></p>" +
-	 						 	"<a class='btn btn-primary sp1' data-toggle='collapse' href='#collapseDesc" + n.id_monumento + "' role='button' aria-expanded='false' aria-controls='collapseExample'>ver descripcion</a>" +
-	 						 	"<div class='collapse' id='collapseDesc"+ n.id_monumento +"'>" +
-	 						 		"<div class='card card-body'><em>" + n.descripcion + "</em></div></div>" +
-	 						 "</div></div></div></div>"
-	 						 );
-
-                $('#accordion3').append(templo);
-            });
-
-        },
-        error: function(data, textStatus, jqXHR) {
-        }
-
-    });
-}
-
-function botonOcultarTemplos(){
-	$('.card-templos').remove();
-	$("#ocultarTemplos").hide();
-}
-
-function botonListarEdificioM(){
-
-	$("#accordion4").html("");
-	$("#ocultarEdificioM").show();
-
-    $.ajax({
-        type: "GET",
-        url:  "/listarEdificioM",
-
-        success: function (data, textStatus, jqXHR) {      	
-            data.forEach(function (n) {
-
-            	var EdificioM = $("<div id="+ n.id_monumento +" class='card card-EdificioM'>" +
- 							 "<div class='card-header' id='heading"+n.id_monumento+"'>" +
- 							 "<h5 class='mb-0'>" + 
-	 							 "<button class='btn btn-link collapsed' data-toggle='collapse' data-target='#collapse"+n.id_monumento+"' aria-expanded='false'"+
-	 							 "aria-controls='collapseTwo'>" + n.nombre + "</button>" +
-	 							 "<button id="+n.id_monumento+" type='button' data-dismiss='modal' onclick='botonAddItem(this);' class='btn btn-success float-right'>+ Añadir</button>" +
-	 						 "</h5>" +
-	 						 "</div>" +
-	 						 "<div id='collapse"+n.id_monumento+"' class='collapse' aria-labelledby='heading"+n.id_monumento+"' data-parent='#accordion'>" +
-	 						 "<div class='card-body'>"  +
-	 						 	"<p>Dirección: " + n.calle + "</p>" +
-	 						 	"<p>Mas info en: <a target='_blank' href='"+n.url+"'> OpenDataMadrid </a></p>" +
-	 						 	"<a class='btn btn-primary sp1' data-toggle='collapse' href='#collapseDesc" + n.id_monumento + "' role='button' aria-expanded='false' aria-controls='collapseExample'>ver descripcion</a>" +
-	 						 	"<div class='collapse' id='collapseDesc"+ n.id_monumento +"'>" +
-	 						 		"<div class='card card-body'><em>" + n.descripcion + "</em></div></div>" +
-	 						 "</div></div></div></div>"
-	 						 );
-
-                $('#accordion4').append(EdificioM);
-            });
-
-        },
-        error: function(data, textStatus, jqXHR) {
-        }
-
-    });
-}
-
-function botonOcultarEdificioM(){
-	$('.card-EdificioM').remove();
-	$("#ocultarEdificioM").hide();
-}
-
-function botonAddItem(obj){
-
-	var id_item = obj.id;
 	$("#nuevaVisita").show();
     $('.alert').remove();
 
-    if(!lugares.includes(obj.id)){
+    if(!lugares.includes(id)){
         if(lugares.length < 10){
-            lugares.push(id_item);
-            cargarItems(id_item);
+            lugares.push(id);
+            cargarItems(id);
         } else{
             $('#accordion2').after('<p class="alert alert-danger">No se pueden añadir más de 10 sitios.</p>');
         }
     } else{
         $('#accordion2').after('<p class="alert alert-danger">Ya has añadido ese elemento.</p>');
     }
+}
+
+function modificarAddLugar(id_visita){
+    $(".addLugar").hide();
+    $(".modAddLugar").show();
+
+    visita = id_visita;
+}
+
+function botonAddModItem(id_monumento){
+    var monumento = id_monumento;
+
+    $.ajax({
+        type: "POST",
+        url:  "/nuevoSitioVisita",
+        data: { id_visita: visita, id_monumento : monumento},
+
+        success: function (data, textStatus, jqXHR) {       
+            location.reload();
+        },
+        error: function(data, textStatus, jqXHR) {
+            alert("Error al añadir el monumento a la visita");
+        }
+    });
 }
 
 function cargarItems(id_lugar){
@@ -691,9 +578,11 @@ function cargarItems(id_lugar){
 }
 
 function deleteItem(obj) {
+    var id = obj.id;
+
     $(obj).parent().parent().parent().remove();
 
-    lugares = lugares.filter(e => e !== obj.id);
+    lugares = lugares.filter(e => e != id);
 }
 
 function validarVisita(){
@@ -766,4 +655,159 @@ function crearVisita(){
         }
 
     });
+}
+
+function cargarSitios(){
+
+    $.ajax({
+        type: "GET",
+        url:  "/listarMuseos",
+
+        success: function (data, textStatus, jqXHR) {       
+            data.forEach(function (n) {
+
+                var museo2 = $("<div id="+ n.id_monumento +" class='card card-museos'>" +
+                             "<div class='card-header' id='heading"+n.id_monumento+"'>" +
+                             "<h5 class='mb-0'>" + 
+                                 "<button class='btn btn-link collapsed' data-toggle='collapse' data-target='#collapse"+n.id_monumento+"' aria-expanded='false'"+
+                                 "aria-controls='collapseTwo'>" + n.nombre + "</button>" +
+                                 "<button id='addLugar' type='button' data-dismiss='modal' onclick='botonAddItem("+n.id_monumento+");' class='addLugar btn btn-success float-right'>+ Añadir</button>" +
+                                 "<button id='modAddLugar' type='button' data-dismiss='modal' onclick='botonAddModItem("+n.id_monumento+");' class='modAddLugar btn btn-primary float-right'>+ Añadir</button>" +
+                             "</h5>" +
+                             "</div>" +
+                             "<div id='collapse"+n.id_monumento+"' class='collapse' aria-labelledby='heading"+n.id_monumento+"' data-parent='#accordion'>" +
+                             "<div class='card-body'>"  +
+                                "<p>Dirección: " + n.calle + "</p>" +
+                                "<p>Mas info en: <a target='_blank' href='"+n.url+"'> OpenDataMadrid </a></p>" +
+                                "<a class='btn btn-primary sp1' data-toggle='collapse' href='#collapseDesc" + n.id_monumento + "' role='button' aria-expanded='false' aria-controls='collapseExample'>ver descripcion</a>" +
+                                "<div class='collapse' id='collapseDesc"+ n.id_monumento +"'>" +
+                                    "<div class='card card-body'><em>" + n.descripcion + "</em></div></div>" +
+                             "</div></div></div></div>"
+                             );
+
+                $('#listadoMuseos').append(museo2);
+            });
+            //Ocultamos los botones de añadir por defecto.
+            $(".addLugar").hide();
+            $(".modAddLugar").hide();
+
+        },
+        error: function(data, textStatus, jqXHR) {
+        }
+
+    });
+
+    $.ajax({
+        type: "GET",
+        url:  "/listarTemplos",
+
+        success: function (data, textStatus, jqXHR) {       
+            data.forEach(function (n) {
+
+                var templo = $("<div id="+ n.id_monumento +" class='card card-templos'>" +
+                             "<div class='card-header' id='heading"+n.id_monumento+"'>" +
+                             "<h5 class='mb-0'>" + 
+                                 "<button class='btn btn-link collapsed' data-toggle='collapse' data-target='#collapse"+n.id_monumento+"' aria-expanded='false'"+
+                                 "aria-controls='collapseTwo'>" + n.nombre + "</button>" +
+                                 "<button id='addLugar' type='button' data-dismiss='modal' onclick='botonAddItem("+n.id_monumento+");' class='addLugar btn btn-success float-right'>+ Añadir</button>" +
+                                 "<button id='modAddLugar' type='button' data-dismiss='modal' onclick='modificarAddLugar("+n.id_monumento+");' class='modAddLugar btn btn-primary float-right'>+ Añadir</button>" +
+                             "</h5>" +
+                             "</div>" +
+                             "<div id='collapse"+n.id_monumento+"' class='collapse' aria-labelledby='heading"+n.id_monumento+"' data-parent='#accordion'>" +
+                             "<div class='card-body'>"  +
+                                "<p>Dirección: " + n.calle + "</p>" +
+                                "<p>Mas info en: <a target='_blank' href='"+n.url+"'> OpenDataMadrid </a></p>" +
+                                "<a class='btn btn-primary sp1' data-toggle='collapse' href='#collapseDesc" + n.id_monumento + "' role='button' aria-expanded='false' aria-controls='collapseExample'>ver descripcion</a>" +
+                                "<div class='collapse' id='collapseDesc"+ n.id_monumento +"'>" +
+                                    "<div class='card card-body'><em>" + n.descripcion + "</em></div></div>" +
+                             "</div></div></div></div>"
+                             );
+
+                $('#listadoIglesias').append(templo);
+            });
+            //Ocultamos los botones de añadir por defecto.
+            $(".addLugar").hide();
+            $(".modAddLugar").hide();
+
+        },
+        error: function(data, textStatus, jqXHR) {
+        }
+
+    });
+
+    $.ajax({
+        type: "GET",
+        url:  "/listarEdificioM",
+
+        success: function (data, textStatus, jqXHR) {       
+            data.forEach(function (n) {
+
+                var EdificioM = $("<div id="+ n.id_monumento +" class='card card-EdificioM'>" +
+                             "<div class='card-header' id='heading"+n.id_monumento+"'>" +
+                             "<h5 class='mb-0'>" + 
+                                 "<button class='btn btn-link collapsed' data-toggle='collapse' data-target='#collapse"+n.id_monumento+"' aria-expanded='false'"+
+                                 "aria-controls='collapseTwo'>" + n.nombre + "</button>" +
+                                 "<button id='addLugar' type='button' data-dismiss='modal' onclick='botonAddItem("+n.id_monumento+");' class='addLugar btn btn-success float-right'>+ Añadir</button>" +
+                                 "<button id='modAddLugar' type='button' data-dismiss='modal' onclick='modificarAddLugar("+n.id_monumento+");' class='modAddLugar btn btn-primary float-right'>+ Añadir</button>" +
+                             "</h5>" +
+                             "</div>" +
+                             "<div id='collapse"+n.id_monumento+"' class='collapse' aria-labelledby='heading"+n.id_monumento+"' data-parent='#accordion'>" +
+                             "<div class='card-body'>"  +
+                                "<p>Dirección: " + n.calle + "</p>" +
+                                "<p>Mas info en: <a target='_blank' href='"+n.url+"'> OpenDataMadrid </a></p>" +
+                                "<a class='btn btn-primary sp1' data-toggle='collapse' href='#collapseDesc" + n.id_monumento + "' role='button' aria-expanded='false' aria-controls='collapseExample'>ver descripcion</a>" +
+                                "<div class='collapse' id='collapseDesc"+ n.id_monumento +"'>" +
+                                    "<div class='card card-body'><em>" + n.descripcion + "</em></div></div>" +
+                             "</div></div></div></div>"
+                             );
+
+                $('#listadoMonumentos').append(EdificioM);
+            });
+            //Ocultamos los botones de añadir por defecto.
+            $(".addLugar").hide();
+            $(".modAddLugar").hide();
+
+        },
+        error: function(data, textStatus, jqXHR) {
+        }
+
+    });
+
+    //Ocultamos los siitos por defecto.
+    ocultarSitios();
+}
+
+function ocultarSitios(){
+    $("#listadoMuseos").hide();
+    $("#listadoIglesias").hide();
+    $("#listadoMonumentos").hide();
+}
+
+function mostrarListaTemplos(){
+    $("#listadoIglesias").show();
+}
+
+function mostrarListaMuseos(){
+    $("#listadoMuseos").show();
+}
+
+function mostrarListaMonumentos(){
+    $("#listadoMonumentos").show();
+}
+
+function ocultarListaTemplos(){
+    $("#listadoIglesias").hide();
+}
+
+function ocultarListaMuseos(){
+    $("#listadoMuseos").hide();
+}
+
+function ocultarListaMonumentos(){
+    $("#listadoMonumentos").hide();
+}
+
+function mostrarBotonAnadir(){
+    $(".addLugar").show();
+    $(".modAddLugar").hide();
 }
